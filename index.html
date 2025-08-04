@@ -188,7 +188,7 @@
                 </div>
             </div>
 
-            <!-- View: Pastos (Novo Dashboard de Pastos) -->
+            <!-- View: Pastos (Dashboard de Pastos) -->
             <div id="view-pastos" class="hidden">
                 <div class="w-full max-w-4xl mx-auto">
                     <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Como está seu pasto hoje?</h1>
@@ -206,7 +206,7 @@
                 </div>
             </div>
 
-            <!-- View: Formulário de Lançamento (antiga view-lancamento) -->
+            <!-- View: Formulário de Lançamento -->
             <div id="view-lancamento-form" class="hidden">
                  <div class="w-full max-w-4xl p-8 space-y-6 bg-white dark:bg-zinc-900 rounded-xl shadow-lg mx-auto border border-gray-200 dark:border-zinc-800">
                     <div class="flex justify-between items-center">
@@ -283,17 +283,39 @@
                  </div>
             </div>
 
-            <!-- View: Cadastro de Pasto -->
-            <div id="view-cadastro-pasto" class="hidden">
+            <!-- View: Cadastros (Hub de seleção) -->
+            <div id="view-cadastros" class="hidden">
                  <div class="w-full max-w-md p-8 space-y-6 bg-white dark:bg-zinc-900 rounded-xl shadow-lg mx-auto border border-gray-200 dark:border-zinc-800">
-                    <h1 class="text-3xl font-bold text-center text-gray-900 dark:text-gray-100">Cadastro de Pasto</h1>
+                    <h1 class="text-3xl font-bold text-center text-gray-900 dark:text-gray-100">Cadastros</h1>
+                    <div class="space-y-4 pt-4">
+                        <button id="show-pasto-cadastro-btn" class="w-full flex items-center justify-center py-4 px-4 border border-transparent rounded-md shadow-sm text-lg font-semibold text-black bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition duration-150 ease-in-out">
+                            <i class="fas fa-map-marked-alt mr-3"></i> Gerenciar Pastos
+                        </button>
+                        <button id="show-brinco-cadastro-btn" class="w-full flex items-center justify-center py-4 px-4 border border-transparent rounded-md shadow-sm text-lg font-semibold text-black bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition duration-150 ease-in-out">
+                            <i class="fas fa-tag mr-3"></i> Gerenciar Brincos
+                        </button>
+                        <button id="show-raca-cadastro-btn" class="w-full flex items-center justify-center py-4 px-4 border border-transparent rounded-md shadow-sm text-lg font-semibold text-black bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition duration-150 ease-in-out">
+                            <i class="fas fa-dna mr-3"></i> Gerenciar Raças
+                        </button>
+                    </div>
+                 </div>
+            </div>
+
+            <!-- View: Cadastro de Pasto -->
+            <div id="view-pasto-form-container" class="hidden">
+                 <div class="w-full max-w-md p-8 space-y-6 bg-white dark:bg-zinc-900 rounded-xl shadow-lg mx-auto border border-gray-200 dark:border-zinc-800">
+                    <div class="flex justify-between items-center">
+                        <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Cadastro de Pasto</h1>
+                        <button class="back-to-cadastros-hub text-yellow-600 hover:text-yellow-700 dark:text-yellow-400 dark:hover:text-yellow-300">
+                            <i class="fas fa-arrow-left mr-2"></i>Voltar
+                        </button>
+                    </div>
                     <div id="message-pasto" class="hidden p-4 text-sm rounded-lg" role="alert"></div>
                     <form id="pastoForm" class="space-y-6" novalidate>
                         <input type="hidden" id="pasto-id">
                         <div>
                             <label for="pasto-nome" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nome do Pasto</label>
                             <input type="text" id="pasto-nome" name="pasto-nome" placeholder="Ex: Pasto do Córrego" required class="mt-1 block w-full px-4 py-3 bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-zinc-700 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm transition duration-150 ease-in-out">
-                            <p id="error-message-pasto" class="hidden mt-2 text-sm text-red-600">Este campo é obrigatório.</p>
                         </div>
                         <div>
                             <button type="submit" id="pasto-submit-button" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-semibold text-black bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition duration-150 ease-in-out">Cadastrar</button>
@@ -303,6 +325,65 @@
                     <div class="space-y-3">
                         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Pastos Cadastrados</h2>
                         <div id="lista-pastos" class="space-y-3"><div class="loader"></div></div>
+                    </div>
+                 </div>
+            </div>
+            
+            <!-- View: Cadastro de Brinco -->
+            <div id="view-brinco-form-container" class="hidden">
+                 <div class="w-full max-w-md p-8 space-y-6 bg-white dark:bg-zinc-900 rounded-xl shadow-lg mx-auto border border-gray-200 dark:border-zinc-800">
+                    <div class="flex justify-between items-center">
+                        <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Cadastro de Brinco</h1>
+                        <button class="back-to-cadastros-hub text-yellow-600 hover:text-yellow-700 dark:text-yellow-400 dark:hover:text-yellow-300">
+                            <i class="fas fa-arrow-left mr-2"></i>Voltar
+                        </button>
+                    </div>
+                    <div id="message-brinco" class="hidden p-4 text-sm rounded-lg" role="alert"></div>
+                    <form id="brincoForm" class="space-y-6" novalidate>
+                        <div>
+                            <label for="brinco-inicio" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Número do Brinco (Início)</label>
+                            <input type="number" id="brinco-inicio" placeholder="Ex: 11001" required class="mt-1 block w-full px-4 py-3 bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-zinc-700 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="brinco-quantidade" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Criar sequência de</label>
+                            <input type="number" id="brinco-quantidade" placeholder="Ex: 5" required class="mt-1 block w-full px-4 py-3 bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-zinc-700 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <button type="submit" id="brinco-submit-button" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-semibold text-black bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">Gerar Brincos</button>
+                        </div>
+                    </form>
+                    <div class="border-t border-gray-200 dark:border-zinc-800 mt-6 pt-6"></div>
+                    <div class="space-y-3">
+                        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Brincos Cadastrados</h2>
+                        <div id="lista-brincos" class="space-y-3"><div class="loader"></div></div>
+                    </div>
+                 </div>
+            </div>
+
+            <!-- View: Cadastro de Raça -->
+            <div id="view-raca-form-container" class="hidden">
+                 <div class="w-full max-w-md p-8 space-y-6 bg-white dark:bg-zinc-900 rounded-xl shadow-lg mx-auto border border-gray-200 dark:border-zinc-800">
+                    <div class="flex justify-between items-center">
+                        <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Cadastro de Raça</h1>
+                        <button class="back-to-cadastros-hub text-yellow-600 hover:text-yellow-700 dark:text-yellow-400 dark:hover:text-yellow-300">
+                            <i class="fas fa-arrow-left mr-2"></i>Voltar
+                        </button>
+                    </div>
+                    <div id="message-raca" class="hidden p-4 text-sm rounded-lg" role="alert"></div>
+                    <form id="racaForm" class="space-y-6" novalidate>
+                        <input type="hidden" id="raca-id">
+                        <div>
+                            <label for="raca-nome" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nome da Raça</label>
+                            <input type="text" id="raca-nome" placeholder="Ex: Nelore" required class="mt-1 block w-full px-4 py-3 bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-zinc-700 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <button type="submit" id="raca-submit-button" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-semibold text-black bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">Cadastrar Raça</button>
+                        </div>
+                    </form>
+                    <div class="border-t border-gray-200 dark:border-zinc-800 mt-6 pt-6"></div>
+                    <div class="space-y-3">
+                        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Raças Cadastradas</h2>
+                        <div id="lista-racas" class="space-y-3"><div class="loader"></div></div>
                     </div>
                  </div>
             </div>
@@ -320,7 +401,7 @@
                             </button>
                         </div>
                         <div class="text-center pt-4">
-                            <p class="text-gray-600 dark:text-gray-400">Versão do Aplicativo: <span id="app-version" class="font-semibold text-gray-800 dark:text-gray-200">1.2</span></p>
+                            <p class="text-gray-600 dark:text-gray-400">Versão do Aplicativo: <span id="app-version" class="font-semibold text-gray-800 dark:text-gray-200">2.5</span></p>
                         </div>
                     </div>
                  </div>
@@ -343,8 +424,8 @@
                     <i class="fas fa-leaf text-xl"></i>
                     <span class="text-xs mt-1">Pastos</span>
                 </button>
-                <button class="nav-link flex flex-col items-center text-gray-500 dark:text-gray-400 w-full" data-view="view-cadastro-pasto">
-                    <i class="fas fa-map-marked-alt text-xl"></i>
+                <button class="nav-link flex flex-col items-center text-gray-500 dark:text-gray-400 w-full" data-view="view-cadastros">
+                    <i class="fas fa-edit text-xl"></i>
                     <span class="text-xs mt-1">Cadastros</span>
                 </button>
                 <button class="nav-link flex flex-col items-center text-gray-500 dark:text-gray-400 w-full" data-view="view-config">
@@ -358,9 +439,9 @@
     <!-- Modal de Confirmação de Exclusão -->
     <div id="confirm-modal" class="modal-overlay hidden">
         <div class="bg-white dark:bg-zinc-800 rounded-lg shadow-xl p-6 w-full max-w-sm mx-4">
-            <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">Confirmar Exclusão</h3>
-            <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">
-                Tem a certeza de que deseja excluir este pasto? Esta ação não pode ser desfeita.
+            <h3 id="confirm-modal-title" class="text-lg font-bold text-gray-900 dark:text-gray-100">Confirmar Exclusão</h3>
+            <p id="confirm-modal-text" class="mt-2 text-sm text-gray-600 dark:text-gray-300">
+                Tem a certeza de que deseja excluir este item? Esta ação não pode ser desfeita.
             </p>
             <div class="mt-6 flex justify-end space-x-3">
                 <button id="cancel-delete-btn" class="px-4 py-2 bg-gray-200 dark:bg-zinc-700 text-gray-800 dark:text-gray-200 rounded-md hover:bg-gray-300 dark:hover:bg-zinc-600">Cancelar</button>
@@ -377,7 +458,7 @@
     <script type="module">
         // Importações do Firebase SDK
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc, getDocs, query, where, orderBy, setLogLevel, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc, getDocs, query, where, orderBy, setLogLevel, setDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         
         
@@ -397,16 +478,14 @@
 
                 if (typeof __firebase_config !== 'undefined' && __firebase_config) {
                     firebaseConfig = JSON.parse(__firebase_config);
-                    console.log("Usando configuração do Firebase injetada pelo ambiente.");
                 } else {
-                    console.warn("Configuração do Firebase não injetada. Usando configuração de demonstração como fallback.");
                     firebaseConfig = {
-                        apiKey: "AIzaSyDft94N-EmDyUzmKBosCrV0Cq3_bK90PAU",
-                        authDomain: "pfa-teste.firebaseapp.com",
-                        projectId: "pfa-teste",
-                        storageBucket: "pfa-teste.appspot.com",
-                        messagingSenderId: "761644217947",
-                        appId: "1:761644217947:web:b595bac8db9cf2e371317e"
+                        apiKey: "YOUR_API_KEY",
+                        authDomain: "YOUR_AUTH_DOMAIN",
+                        projectId: "YOUR_PROJECT_ID",
+                        storageBucket: "YOUR_STORAGE_BUCKET",
+                        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+                        appId: "YOUR_APP_ID"
                     };
                 }
                 
@@ -418,10 +497,8 @@
 
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     await signInWithCustomToken(auth, __initial_auth_token);
-                    console.log("Autenticado com token customizado.");
                 } else {
                     await signInAnonymously(auth);
-                    console.log("Autenticado anonimamente.");
                 }
 
                 const appId = typeof __app_id !== 'undefined' ? __app_id : 'pfa-app-default';
@@ -429,6 +506,8 @@
 
                 const pastosCollection = collection(db, `artifacts/${appId}/users/${userId}/pastos`);
                 const lancamentosCollection = collection(db, `artifacts/${appId}/users/${userId}/lancamentos`);
+                const brincosCollection = collection(db, `artifacts/${appId}/users/${userId}/brincos`);
+                const racasCollection = collection(db, `artifacts/${appId}/users/${userId}/racas`);
                 
                 // --- INÍCIO DA LÓGICA DO APLICATIVO ---
 
@@ -456,11 +535,13 @@
                     applyTheme(newTheme);
                 });
 
-                const views = ['view-home', 'view-pastos', 'view-lancamento-form', 'view-cadastro-pasto', 'view-config', 'view-historico'];
+                const views = ['view-home', 'view-pastos', 'view-lancamento-form', 'view-cadastros', 'view-pasto-form-container', 'view-brinco-form-container', 'view-raca-form-container', 'view-config', 'view-historico'];
                 const navLinks = document.querySelectorAll('.nav-link');
                 const addLancamentoFab = document.getElementById('add-lancamento-fab');
                 let localPastos = [];
                 let localLancamentos = [];
+                let localBrincos = [];
+                let localRacas = [];
                 let lotacaoChartInstance, categoriaChartInstance;
 
                 function showView(viewId) {
@@ -471,13 +552,23 @@
                         link.classList.toggle('bottom-nav-active', link.dataset.view === viewId);
                     });
 
-                    addLancamentoFab.classList.toggle('hidden', viewId !== 'view-pastos');
+                    const fabVisibleViews = ['view-pastos'];
+                    addLancamentoFab.classList.toggle('hidden', !fabVisibleViews.includes(viewId));
                 }
                 
                 navLinks.forEach(link => link.addEventListener('click', () => showView(link.dataset.view)));
                 
+                // --- Navegação Cadastros ---
+                document.getElementById('show-pasto-cadastro-btn').addEventListener('click', () => showView('view-pasto-form-container'));
+                document.getElementById('show-brinco-cadastro-btn').addEventListener('click', () => showView('view-brinco-form-container'));
+                document.getElementById('show-raca-cadastro-btn').addEventListener('click', () => showView('view-raca-form-container'));
+                document.querySelectorAll('.back-to-cadastros-hub').forEach(btn => {
+                    btn.addEventListener('click', () => showView('view-cadastros'));
+                });
+
+
                 const historyButton = document.getElementById('history-button');
-                historyButton.addEventListener('click', () => showPastoHistory(null)); // null para histórico geral
+                historyButton.addEventListener('click', () => showPastoHistory(null));
 
                 document.getElementById('back-to-pastos-button').addEventListener('click', () => {
                     resetLancamentoForm();
@@ -595,6 +686,7 @@
 
                 timelinePastoSelect.addEventListener('change', (e) => renderTimeline(e.target.value));
 
+                // --- LÓGICA DE CADASTRO DE PASTOS ---
                 const pastoForm = document.getElementById('pastoForm');
                 const inputPastoId = document.getElementById('pasto-id');
                 const inputPastoNome = document.getElementById('pasto-nome');
@@ -670,7 +762,7 @@
                             showMessage(messagePasto, 'Pasto em uso, não pode ser excluído.', 'error');
                             return;
                         }
-                        showConfirmModal(async () => {
+                        showConfirmModal('Excluir Pasto?', 'Deseja realmente excluir este pasto?', async () => {
                             await deleteDoc(doc(db, `artifacts/${appId}/users/${userId}/pastos`, id));
                         });
                     } else if (target.classList.contains('edit-btn')) {
@@ -682,6 +774,81 @@
                     }
                 });
 
+                // --- LÓGICA DE CADASTRO DE RAÇAS ---
+                const racaForm = document.getElementById('racaForm');
+                const inputRacaId = document.getElementById('raca-id');
+                const inputRacaNome = document.getElementById('raca-nome');
+                const messageRaca = document.getElementById('message-raca');
+                const listaRacasContainer = document.getElementById('lista-racas');
+                const racaSubmitButton = document.getElementById('raca-submit-button');
+
+                onSnapshot(query(racasCollection, orderBy("nome")), (snapshot) => {
+                    localRacas = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    renderRacas(localRacas);
+                });
+
+                function renderRacas(racas) {
+                    listaRacasContainer.innerHTML = '';
+                    if (racas.length === 0) {
+                        listaRacasContainer.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400">Nenhuma raça cadastrada.</p>';
+                        return;
+                    }
+                    racas.forEach(raca => {
+                        const item = document.createElement('div');
+                        item.className = 'flex items-center justify-between bg-white dark:bg-zinc-800 p-3 rounded-md shadow-sm border border-gray-200 dark:border-zinc-700';
+                        item.innerHTML = `<span class="text-gray-800 dark:text-gray-200">${raca.nome}</span><div class="space-x-2"><button data-id="${raca.id}" class="edit-raca-btn text-blue-500 hover:text-blue-700"><i class="fas fa-pencil-alt"></i></button><button data-id="${raca.id}" class="delete-raca-btn text-red-500 hover:text-red-700"><i class="fas fa-trash-alt"></i></button></div>`;
+                        listaRacasContainer.appendChild(item);
+                    });
+                }
+
+                racaForm.addEventListener('submit', async (event) => {
+                    event.preventDefault();
+                    const nome = inputRacaNome.value.trim();
+                    const id = inputRacaId.value;
+                    if (!nome) return;
+
+                    const isDuplicate = localRacas.some(raca => raca.nome.toLowerCase() === nome.toLowerCase() && raca.id !== id);
+                    if (isDuplicate) {
+                        showMessage(messageRaca, 'Esta raça já está cadastrada.', 'error');
+                        return;
+                    }
+
+                    racaSubmitButton.disabled = true;
+                    try {
+                        const docRef = id ? doc(db, `artifacts/${appId}/users/${userId}/racas`, id) : doc(racasCollection);
+                        await setDoc(docRef, { nome }, { merge: !id });
+                        
+                        racaForm.reset();
+                        inputRacaId.value = '';
+                        racaSubmitButton.textContent = 'Cadastrar Raça';
+                        showMessage(messageRaca, id ? 'Raça atualizada!' : 'Raça cadastrada!', 'success');
+                    } catch(e) {
+                         showMessage(messageRaca, 'Ocorreu um erro.', 'error');
+                    } finally {
+                        racaSubmitButton.disabled = false;
+                    }
+                });
+
+                listaRacasContainer.addEventListener('click', async (event) => {
+                    const target = event.target.closest('button');
+                    if (!target) return;
+                    const id = target.dataset.id;
+                    if (target.classList.contains('delete-raca-btn')) {
+                        // Futuramente, adicionar verificação se a raça está em uso
+                        showConfirmModal('Excluir Raça?', 'Deseja realmente excluir esta raça?', async () => {
+                            await deleteDoc(doc(db, `artifacts/${appId}/users/${userId}/racas`, id));
+                            showMessage(messageRaca, 'Raça excluída.', 'success');
+                        });
+                    } else if (target.classList.contains('edit-raca-btn')) {
+                        const raca = localRacas.find(r => r.id === id);
+                        inputRacaId.value = raca.id;
+                        inputRacaNome.value = raca.nome;
+                        racaSubmitButton.textContent = 'Salvar Alterações';
+                        inputRacaNome.focus();
+                    }
+                });
+
+                // --- LÓGICA DE LANÇAMENTOS ---
                 const lancamentoForm = document.getElementById('lancamentoForm');
                 const pesoKgInput = document.getElementById('peso_medio_kg');
                 const pesoArrobaDisplay = document.getElementById('peso_arroba_display');
@@ -701,7 +868,6 @@
 
                 onSnapshot(query(lancamentosCollection, orderBy("data", "desc")), (snapshot) => {
                     localLancamentos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    // A função renderHistorico agora é chamada dinamicamente
                     updateDashboard();
                     renderTimeline(timelinePastoSelect.value);
                     renderPastosSummary();
@@ -749,7 +915,7 @@
                     pesoSection.classList.remove('hidden');
                     pesoKgInput.required = true;
                     lancamentoSubmitButton.textContent = 'Salvar Lançamento';
-                    pastoSelect.disabled = false; // Garante que o select seja reativado
+                    pastoSelect.disabled = false;
                     converterParaArroba();
                     setDataHoraAtual();
                 }
@@ -786,6 +952,101 @@
                     }
                 });
                 
+                // --- LÓGICA DE CADASTRO DE BRINCOS ---
+                const brincoForm = document.getElementById('brincoForm');
+                const brincoInicioInput = document.getElementById('brinco-inicio');
+                const brincoQuantidadeInput = document.getElementById('brinco-quantidade');
+                const brincoSubmitButton = document.getElementById('brinco-submit-button');
+                const listaBrincosContainer = document.getElementById('lista-brincos');
+                const messageBrinco = document.getElementById('message-brinco');
+
+                onSnapshot(query(brincosCollection, orderBy("numero")), (snapshot) => {
+                    localBrincos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    renderBrincos(localBrincos);
+                });
+
+                function renderBrincos(brincos) {
+                    listaBrincosContainer.innerHTML = '';
+                    if (brincos.length === 0) {
+                        listaBrincosContainer.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400">Nenhum brinco cadastrado.</p>';
+                        return;
+                    }
+                    brincos.forEach(brinco => {
+                        const isDisponivel = brinco.status === 'disponivel';
+                        const item = document.createElement('div');
+                        item.className = 'flex items-center justify-between bg-white dark:bg-zinc-800 p-3 rounded-md shadow-sm border border-gray-200 dark:border-zinc-700';
+                        item.innerHTML = `
+                            <div class="flex items-center">
+                                <span class="font-semibold text-gray-800 dark:text-gray-200 mr-4">${brinco.numero}</span>
+                                <span class="text-xs font-medium px-2 py-1 rounded-full ${isDisponivel ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'}">
+                                    <i class="fas ${isDisponivel ? 'fa-check-circle' : 'fa-link'} mr-1"></i>
+                                    ${isDisponivel ? 'Disponível' : 'Utilizado'}
+                                </span>
+                            </div>
+                            <div class="space-x-2">
+                                <button data-id="${brinco.id}" data-numero="${brinco.numero}" class="edit-brinco-btn text-blue-500 hover:text-blue-700"><i class="fas fa-pencil-alt"></i></button>
+                                <button data-id="${brinco.id}" class="delete-brinco-btn text-red-500 hover:text-red-700"><i class="fas fa-trash-alt"></i></button>
+                            </div>`;
+                        listaBrincosContainer.appendChild(item);
+                    });
+                }
+
+                brincoForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const inicio = parseInt(brincoInicioInput.value);
+                    const quantidade = parseInt(brincoQuantidadeInput.value);
+
+                    if (isNaN(inicio) || isNaN(quantidade) || quantidade <= 0) {
+                        showMessage(messageBrinco, 'Por favor, insira valores válidos.', 'error');
+                        return;
+                    }
+                    
+                    brincoSubmitButton.disabled = true;
+                    brincoSubmitButton.textContent = 'Gerando...';
+                    try {
+                        const batch = writeBatch(db);
+                        for (let i = 0; i < quantidade; i++) {
+                            const numeroBrinco = inicio + i;
+                            const docRef = doc(brincosCollection);
+                            batch.set(docRef, {
+                                numero: numeroBrinco.toString(),
+                                status: 'disponivel'
+                            });
+                        }
+                        await batch.commit();
+                        showMessage(messageBrinco, `${quantidade} brincos gerados com sucesso!`, 'success');
+                        brincoForm.reset();
+                    } catch (error) {
+                        console.error("Erro ao gerar brincos:", error);
+                        showMessage(messageBrinco, 'Erro ao gerar os brincos.', 'error');
+                    } finally {
+                        brincoSubmitButton.disabled = false;
+                        brincoSubmitButton.textContent = 'Gerar Brincos';
+                    }
+                });
+
+                listaBrincosContainer.addEventListener('click', async (e) => {
+                    const target = e.target.closest('button');
+                    if (!target) return;
+                    const id = target.dataset.id;
+
+                    if (target.classList.contains('delete-brinco-btn')) {
+                        showConfirmModal('Excluir Brinco?', 'Deseja realmente excluir este brinco?', async () => {
+                            await deleteDoc(doc(db, `artifacts/${appId}/users/${userId}/brincos`, id));
+                            showMessage(messageBrinco, 'Brinco excluído.', 'success');
+                        });
+                    } else if (target.classList.contains('edit-brinco-btn')) {
+                        const numeroAtual = target.dataset.numero;
+                        const novoNumero = prompt("Digite o novo número para o brinco:", numeroAtual);
+                        if (novoNumero && novoNumero.trim() !== '' && novoNumero !== numeroAtual) {
+                            const brincoRef = doc(db, `artifacts/${appId}/users/${userId}/brincos`, id);
+                            await updateDoc(brincoRef, { numero: novoNumero.trim() });
+                            showMessage(messageBrinco, 'Brinco atualizado.', 'success');
+                        }
+                    }
+                });
+
+
                 function showMessage(element, message, type = 'success') {
                     element.textContent = message;
                     element.className = 'p-4 text-sm rounded-lg';
@@ -855,13 +1116,11 @@
                     const pastoNome = card.dataset.pastoNome;
 
                     if (event.target.closest('.quick-launch-btn')) {
-                        // Clicou no botão de lançamento rápido
                         resetLancamentoForm();
                         pastoSelect.value = pastoId;
                         pastoSelect.disabled = true;
                         showView('view-lancamento-form');
                     } else {
-                        // Clicou no card para ver o histórico
                         showPastoHistory(pastoId, pastoNome);
                     }
                 });
@@ -921,11 +1180,15 @@
                 }
 
                 const confirmModal = document.getElementById('confirm-modal');
+                const confirmModalTitle = document.getElementById('confirm-modal-title');
+                const confirmModalText = document.getElementById('confirm-modal-text');
                 const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
                 const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
                 let deleteCallback = null;
 
-                function showConfirmModal(callback) {
+                function showConfirmModal(title, text, callback) {
+                    confirmModalTitle.textContent = title;
+                    confirmModalText.textContent = text;
                     deleteCallback = callback;
                     confirmModal.classList.remove('hidden');
                 }
