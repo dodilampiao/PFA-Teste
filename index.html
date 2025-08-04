@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,11 +15,12 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6; /* gray-100 */
+            background-color: #f3f4f6; /* Fundo cinza claro */
             padding-bottom: 80px; /* Espaço para a bottom bar */
+            transition: background-color 0.3s ease;
         }
         .dark body {
-            background-color: #111827; /* gray-900 */
+            background-color: #0d0d0d; /* Fundo preto/cinza escuro para modo escuro */
         }
         /* Remove as setas de input de número */
         input[type=number]::-webkit-inner-spin-button, 
@@ -33,7 +34,7 @@
         /* Animação de carregamento */
         .loader {
             border: 4px solid #e5e7eb; /* gray-200 */
-            border-top: 4px solid #4f46e5; /* indigo-600 */
+            border-top: 4px solid #EAB308; /* Amarelo (yellow-500) */
             border-radius: 50%;
             width: 40px;
             height: 40px;
@@ -46,7 +47,7 @@
         }
         /* Estilos da Bottom Bar */
         .bottom-nav-active i, .bottom-nav-active span {
-            color: #4f46e5; /* indigo-600 */
+            color: #EAB308; /* Amarelo (yellow-500) para destaque */
         }
         
         /* --- Estilos da Tela de Splash --- */
@@ -61,7 +62,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: #000000;
+            background: #fcd34d; /* Fundo Amarelo (yellow-300) */
             transition: opacity 0.8s ease-out;
         }
         #splash-screen.hidden {
@@ -83,14 +84,54 @@
             animation: fadeIn 1s ease-in-out 0.8s forwards;
             opacity: 0;
         }
+        /* Estilo para o modal de confirmação */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.3s ease;
+        }
+        .toast-notification {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            background-color: #22c55e; /* green-500 */
+            color: white;
+            border-radius: 9999px;
+            z-index: 1001;
+            opacity: 0;
+            transition: opacity 0.5s, transform 0.5s;
+            pointer-events: none;
+        }
+        .toast-notification.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-20px);
+        }
+        .pasto-card {
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .pasto-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
     </style>
 </head>
 <body class="min-h-screen">
 
     <!-- Tela de Splash -->
     <div id="splash-screen">
-        <img id="splash-logo" src="https://i.imgur.com/HNAI7PO.png" alt="Logo PFA" class="w-36 h-36 rounded-full">
-        <h1 id="splash-text" class="mt-6 text-xl md:text-2xl font-semibold text-white text-center px-4">
+        <img id="splash-logo" src="https://i.imgur.com/QHWd5kT.png" alt="Logo PFA" class="w-36 h-36 rounded-full">
+        <h1 id="splash-text" class="mt-6 text-xl md:text-2xl font-semibold text-black text-center px-4">
             Bem vindo a PFA<br>Pasto Fazenda Aliança
         </h1>
     </div>
@@ -98,7 +139,7 @@
     <!-- Conteúdo principal do App (começa invisível) -->
     <div id="app-wrapper" class="opacity-0 transition-opacity duration-1000">
         <!-- Header Fixo -->
-        <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-20 border-b border-gray-200 dark:border-gray-700">
+        <header class="bg-white dark:bg-zinc-900 shadow-md sticky top-0 z-20 border-b border-gray-200 dark:border-zinc-800">
             <div class="container mx-auto px-4 py-4 flex justify-center items-center">
                 <h1 class="text-xl font-bold text-gray-800 dark:text-gray-100" id="header-title">PFA - Pasto Fazenda Aliança</h1>
             </div>
@@ -107,53 +148,92 @@
         <!-- Conteúdo Principal que troca entre as telas -->
         <main class="container mx-auto p-4 md:p-8">
 
-            <!-- View: Home (Dashboard) -->
+            <!-- View: Home (Dashboard Geral) -->
             <div id="view-home">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow text-center">
+                    <div class="bg-white dark:bg-zinc-900 p-4 rounded-lg shadow text-center border border-gray-200 dark:border-zinc-800">
                         <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total de Gado</h3>
                         <p id="total-gado" class="text-3xl font-bold text-gray-900 dark:text-gray-100">0</p>
                     </div>
-                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow text-center">
+                    <div class="bg-white dark:bg-zinc-900 p-4 rounded-lg shadow text-center border border-gray-200 dark:border-zinc-800">
                         <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total de Pastos</h3>
                         <p id="total-pastos" class="text-3xl font-bold text-gray-900 dark:text-gray-100">0</p>
                     </div>
-                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow text-center">
-                        <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Peso Médio</h3>
+                    <div class="bg-white dark:bg-zinc-900 p-4 rounded-lg shadow text-center border border-gray-200 dark:border-zinc-800">
+                        <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Peso Médio Total</h3>
                         <p id="peso-medio" class="text-3xl font-bold text-gray-900 dark:text-gray-100">0 kg</p>
                     </div>
                 </div>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow flex flex-col">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    <div class="bg-white dark:bg-zinc-900 p-4 rounded-lg shadow flex flex-col border border-gray-200 dark:border-zinc-800">
                         <h3 class="font-semibold text-center mb-2 text-gray-800 dark:text-gray-200">Lotação por Pasto</h3>
                         <div class="relative h-80">
                             <canvas id="lotacaoChart"></canvas>
                         </div>
                     </div>
-                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow flex flex-col">
+                    <div class="bg-white dark:bg-zinc-900 p-4 rounded-lg shadow flex flex-col border border-gray-200 dark:border-zinc-800">
                         <h3 class="font-semibold text-center mb-2 text-gray-800 dark:text-gray-200">Rebanho por Categoria</h3>
                         <div class="relative h-80">
                             <canvas id="categoriaChart"></canvas>
                         </div>
                     </div>
                 </div>
+                <div class="bg-white dark:bg-zinc-900 p-4 rounded-lg shadow border border-gray-200 dark:border-zinc-800">
+                    <h3 class="font-semibold text-center mb-4 text-gray-800 dark:text-gray-200">Linha do Tempo do Pasto</h3>
+                    <div>
+                        <label for="timeline-pasto-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Selecione um Pasto</label>
+                        <select id="timeline-pasto-select" class="mt-1 block w-full px-4 py-3 bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-zinc-700 rounded-md shadow-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"></select>
+                    </div>
+                    <div id="timeline-container" class="mt-6 relative pl-4 border-l-2 border-gray-200 dark:border-zinc-700 space-y-6"></div>
+                </div>
             </div>
 
-            <!-- View: Lançamento de Gado -->
-            <div id="view-lancamento" class="hidden">
-                 <div class="w-full max-w-4xl p-8 space-y-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg mx-auto">
-                    <h1 class="text-3xl font-bold text-center text-gray-900 dark:text-gray-100">Lançamento de Gado</h1>
+            <!-- View: Pastos (Novo Dashboard de Pastos) -->
+            <div id="view-pastos" class="hidden">
+                <div class="w-full max-w-4xl mx-auto">
+                    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Como está seu pasto hoje?</h1>
+                    <div class="flex items-center space-x-2 mb-6">
+                        <button id="copy-status-button" class="flex-1 inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-black bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
+                            <i class="fab fa-whatsapp mr-2"></i>Copiar Situação
+                        </button>
+                         <button id="history-button" class="flex-1 inline-flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-zinc-700 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-200 bg-white dark:bg-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
+                            <i class="fas fa-history mr-2"></i>Histórico Geral
+                        </button>
+                    </div>
+                    <div id="pastos-summary-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Cards de resumo dos pastos serão inseridos aqui -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- View: Formulário de Lançamento (antiga view-lancamento) -->
+            <div id="view-lancamento-form" class="hidden">
+                 <div class="w-full max-w-4xl p-8 space-y-6 bg-white dark:bg-zinc-900 rounded-xl shadow-lg mx-auto border border-gray-200 dark:border-zinc-800">
+                    <div class="flex justify-between items-center">
+                        <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Lançamento</h1>
+                        <button id="back-to-pastos-button" class="text-yellow-600 hover:text-yellow-700 dark:text-yellow-400 dark:hover:text-yellow-300">
+                            <i class="fas fa-arrow-left mr-2"></i>Voltar
+                        </button>
+                    </div>
                     <div id="message-lancamento" class="hidden p-4 text-sm rounded-lg" role="alert"></div>
                     <form id="lancamentoForm" class="space-y-6">
-                        <input type="hidden" id="lancamento-id">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tipo de Movimentação</label>
+                            <div class="flex items-center space-x-4">
+                                <input type="radio" id="tipo-entrada" name="tipo_movimentacao" value="entrada" checked class="h-4 w-4 text-yellow-600 border-gray-300 focus:ring-yellow-500">
+                                <label for="tipo-entrada" class="text-gray-700 dark:text-gray-300">Entrada</label>
+                                <input type="radio" id="tipo-saida" name="tipo_movimentacao" value="saida" class="h-4 w-4 text-yellow-600 border-gray-300 focus:ring-yellow-500">
+                                <label for="tipo-saida" class="text-gray-700 dark:text-gray-300">Saída</label>
+                            </div>
+                        </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="pasto-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Pasto</label>
-                                <select id="pasto-select" name="pasto" required class="mt-1 block w-full px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></select>
+                                <select id="pasto-select" name="pasto" required class="mt-1 block w-full px-4 py-3 bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-zinc-700 rounded-md shadow-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"></select>
                             </div>
                              <div>
                                 <label for="categoria-gado" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Categoria</label>
-                                <select id="categoria-gado" name="categoria" required class="mt-1 block w-full px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <select id="categoria-gado" name="categoria" required class="mt-1 block w-full px-4 py-3 bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-zinc-700 rounded-md shadow-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm">
                                     <option value="Boi">Boi</option>
                                     <option value="Vaca">Vaca</option>
                                     <option value="Bezerro">Bezerro</option>
@@ -165,52 +245,61 @@
                          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="quantidade_gado" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Qtd. de Gado</label>
-                                <input type="number" id="quantidade_gado" name="quantidade_gado" placeholder="Ex: 50" required class="mt-1 block w-full px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <input type="number" id="quantidade_gado" name="quantidade_gado" placeholder="Ex: 50" required class="mt-1 block w-full px-4 py-3 bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-zinc-700 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm">
                             </div>
                             <div>
                                 <label for="data_lancamento" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Data do Lançamento</label>
-                                <input type="datetime-local" id="data_lancamento" name="data_lancamento" required class="mt-1 block w-full px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <input type="datetime-local" id="data_lancamento" name="data_lancamento" required class="mt-1 block w-full px-4 py-3 bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-zinc-700 rounded-md shadow-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm">
                             </div>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="peso-section">
                             <div>
                                 <label for="peso_medio_kg" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Média de Peso (kg)</label>
-                                <input type="number" id="peso_medio_kg" name="peso_medio_kg" step="0.01" placeholder="Ex: 450.5" required class="mt-1 block w-full px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <input type="number" id="peso_medio_kg" name="peso_medio_kg" step="0.01" placeholder="Ex: 450.5" required class="mt-1 block w-full px-4 py-3 bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-zinc-700 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm">
                             </div>
                             <div>
                                 <label for="peso_arroba" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Peso em Arrobas (@)</label>
-                                <div id="peso_arroba_display" class="mt-1 block w-full px-4 py-3 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-200 border border-gray-200 dark:border-gray-600 rounded-md shadow-sm sm:text-sm">0.00 @</div>
+                                <div id="peso_arroba_display" class="mt-1 block w-full px-4 py-3 bg-gray-100 dark:bg-zinc-800 text-gray-900 dark:text-gray-200 border border-gray-200 dark:border-zinc-700 rounded-md shadow-sm sm:text-sm">0.00 @</div>
                             </div>
                         </div>
                         <div>
-                            <button type="submit" id="lancamento-submit-button" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Salvar Lançamento</button>
+                            <button type="submit" id="lancamento-submit-button" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-semibold text-black bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">Salvar Lançamento</button>
                         </div>
                     </form>
-                    <div class="border-t border-gray-200 dark:border-gray-700 mt-6 pt-6"></div>
-                    <div class="space-y-3">
-                        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Lançamentos Recentes</h2>
-                        <div id="lista-lancamentos" class="space-y-3"><div class="loader"></div></div>
-                    </div>
                 </div>
+            </div>
+            
+            <!-- View: Histórico (Geral ou Filtrado por Pasto) -->
+            <div id="view-historico" class="hidden">
+                 <div class="w-full max-w-4xl p-8 space-y-6 bg-white dark:bg-zinc-900 rounded-xl shadow-lg mx-auto border border-gray-200 dark:border-zinc-800">
+                    <div class="flex justify-between items-center">
+                        <h1 id="historico-title" class="text-3xl font-bold text-gray-900 dark:text-gray-100">Histórico de Movimentações</h1>
+                        <button id="back-to-pastos-from-history-button" class="text-yellow-600 hover:text-yellow-700 dark:text-yellow-400 dark:hover:text-yellow-300">
+                            <i class="fas fa-arrow-left mr-2"></i>Voltar
+                        </button>
+                    </div>
+                    <div class="border-t border-gray-200 dark:border-zinc-800 mt-6 pt-6"></div>
+                    <div id="lista-historico" class="space-y-3"><div class="loader"></div></div>
+                 </div>
             </div>
 
             <!-- View: Cadastro de Pasto -->
             <div id="view-cadastro-pasto" class="hidden">
-                 <div class="w-full max-w-md p-8 space-y-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg mx-auto">
+                 <div class="w-full max-w-md p-8 space-y-6 bg-white dark:bg-zinc-900 rounded-xl shadow-lg mx-auto border border-gray-200 dark:border-zinc-800">
                     <h1 class="text-3xl font-bold text-center text-gray-900 dark:text-gray-100">Cadastro de Pasto</h1>
                     <div id="message-pasto" class="hidden p-4 text-sm rounded-lg" role="alert"></div>
                     <form id="pastoForm" class="space-y-6" novalidate>
                         <input type="hidden" id="pasto-id">
                         <div>
                             <label for="pasto-nome" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nome do Pasto</label>
-                            <input type="text" id="pasto-nome" name="pasto-nome" placeholder="Ex: Pasto do Córrego" required class="mt-1 block w-full px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150 ease-in-out">
+                            <input type="text" id="pasto-nome" name="pasto-nome" placeholder="Ex: Pasto do Córrego" required class="mt-1 block w-full px-4 py-3 bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-zinc-700 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm transition duration-150 ease-in-out">
                             <p id="error-message-pasto" class="hidden mt-2 text-sm text-red-600">Este campo é obrigatório.</p>
                         </div>
                         <div>
-                            <button type="submit" id="pasto-submit-button" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">Cadastrar</button>
+                            <button type="submit" id="pasto-submit-button" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-semibold text-black bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition duration-150 ease-in-out">Cadastrar</button>
                         </div>
                     </form>
-                    <div class="border-t border-gray-200 dark:border-gray-700 mt-6 pt-6"></div>
+                    <div class="border-t border-gray-200 dark:border-zinc-800 mt-6 pt-6"></div>
                     <div class="space-y-3">
                         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Pastos Cadastrados</h2>
                         <div id="lista-pastos" class="space-y-3"><div class="loader"></div></div>
@@ -220,29 +309,43 @@
 
             <!-- View: Configurações -->
             <div id="view-config" class="hidden">
-                 <div class="w-full max-w-md p-8 space-y-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg mx-auto">
+                 <div class="w-full max-w-md p-8 space-y-6 bg-white dark:bg-zinc-900 rounded-xl shadow-lg mx-auto border border-gray-200 dark:border-zinc-800">
                     <h1 class="text-3xl font-bold text-center text-gray-900 dark:text-gray-100">Ajustes</h1>
-                    <div class="border-t border-gray-200 dark:border-gray-700 mt-6 pt-6 text-center">
-                        <p class="text-gray-600 dark:text-gray-400">Versão do Aplicativo: <span class="font-semibold text-gray-800 dark:text-gray-200">1.1</span></p>
+                    
+                    <div class="border-t border-gray-200 dark:border-zinc-800 mt-6 pt-6 space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-700 dark:text-gray-300">Modo Escuro</span>
+                            <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-zinc-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
+                                <i class="fas fa-moon"></i>
+                            </button>
+                        </div>
+                        <div class="text-center pt-4">
+                            <p class="text-gray-600 dark:text-gray-400">Versão do Aplicativo: <span id="app-version" class="font-semibold text-gray-800 dark:text-gray-200">1.2</span></p>
+                        </div>
                     </div>
                  </div>
             </div>
         </main>
         
+        <!-- Botão Flutuante para Adicionar Lançamento -->
+        <button id="add-lancamento-fab" class="hidden fixed bottom-24 right-6 bg-yellow-500 hover:bg-yellow-600 text-black w-14 h-14 rounded-full flex items-center justify-center shadow-lg z-30">
+            <i class="fas fa-plus text-2xl"></i>
+        </button>
+
         <!-- Barra de Navegação Inferior (Bottom Bar) -->
-        <footer class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 shadow-t border-t border-gray-200 dark:border-gray-700" style="box-shadow: 0 -2px 10px rgba(0,0,0,0.05);">
+        <footer class="fixed bottom-0 left-0 right-0 bg-white dark:bg-zinc-900 shadow-t border-t border-gray-200 dark:border-zinc-800" style="box-shadow: 0 -2px 10px rgba(0,0,0,0.05);">
             <nav class="flex justify-around items-center h-16">
                 <button class="nav-link flex flex-col items-center text-gray-500 dark:text-gray-400 w-full" data-view="view-home">
                     <i class="fas fa-chart-pie text-xl"></i>
                     <span class="text-xs mt-1">Dashboard</span>
                 </button>
-                <button class="nav-link flex flex-col items-center text-gray-500 dark:text-gray-400 w-full" data-view="view-lancamento">
-                    <i class="fas fa-plus-circle text-xl"></i>
-                    <span class="text-xs mt-1">Lançar</span>
+                <button class="nav-link flex flex-col items-center text-gray-500 dark:text-gray-400 w-full" data-view="view-pastos">
+                    <i class="fas fa-leaf text-xl"></i>
+                    <span class="text-xs mt-1">Pastos</span>
                 </button>
                 <button class="nav-link flex flex-col items-center text-gray-500 dark:text-gray-400 w-full" data-view="view-cadastro-pasto">
                     <i class="fas fa-map-marked-alt text-xl"></i>
-                    <span class="text-xs mt-1">Pastos</span>
+                    <span class="text-xs mt-1">Cadastros</span>
                 </button>
                 <button class="nav-link flex flex-col items-center text-gray-500 dark:text-gray-400 w-full" data-view="view-config">
                     <i class="fas fa-cog text-xl"></i>
@@ -252,356 +355,610 @@
         </footer>
     </div>
 
+    <!-- Modal de Confirmação de Exclusão -->
+    <div id="confirm-modal" class="modal-overlay hidden">
+        <div class="bg-white dark:bg-zinc-800 rounded-lg shadow-xl p-6 w-full max-w-sm mx-4">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">Confirmar Exclusão</h3>
+            <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">
+                Tem a certeza de que deseja excluir este pasto? Esta ação não pode ser desfeita.
+            </p>
+            <div class="mt-6 flex justify-end space-x-3">
+                <button id="cancel-delete-btn" class="px-4 py-2 bg-gray-200 dark:bg-zinc-700 text-gray-800 dark:text-gray-200 rounded-md hover:bg-gray-300 dark:hover:bg-zinc-600">Cancelar</button>
+                <button id="confirm-delete-btn" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notificação Toast -->
+    <div id="toast-notification" class="toast-notification">Texto copiado!</div>
+
 
     <!-- Firebase SDKs -->
     <script type="module">
-        // ATENÇÃO: Substitua estas configurações pelas do seu próprio projeto Firebase.
-        const firebaseConfig = {
-            apiKey: "SUA_API_KEY",
-            authDomain: "SEU_AUTH_DOMAIN",
-            projectId: "SEU_PROJECT_ID",
-            storageBucket: "SEU_STORAGE_BUCKET",
-            messagingSenderId: "SEU_MESSAGING_SENDER_ID",
-            appId: "SEU_APP_ID"
-        };
-        const demoFirebaseConfig = {
-            apiKey: "AIzaSyDft94N-EmDyUzmKBosCrV0Cq3_bK90PAU",
-            authDomain: "pfa-teste.firebaseapp.com",
-            projectId: "pfa-teste",
-            storageBucket: "pfa-teste.appspot.com",
-            messagingSenderId: "761644217947",
-            appId: "1:761644217947:web:b595bac8db9cf2e371317e"
-        };
-        const finalFirebaseConfig = firebaseConfig.apiKey === "SUA_API_KEY" ? demoFirebaseConfig : firebaseConfig;
-
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
-
-        const app = initializeApp(finalFirebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-        const pastosCollection = collection(db, "pastos");
-        const lancamentosCollection = collection(db, "lancamentos");
-
-        signInAnonymously(auth).catch((error) => {
-            console.error("Erro na autenticação anônima:", error);
-        });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            
+        // Importações do Firebase SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc, getDocs, query, where, orderBy, setLogLevel, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        
+        
+        document.addEventListener('DOMContentLoaded', async () => {
             // --- LÓGICA DA SPLASH SCREEN ---
             const splashScreen = document.getElementById('splash-screen');
             const appWrapper = document.getElementById('app-wrapper');
-
             setTimeout(() => {
                 splashScreen.classList.add('hidden');
                 appWrapper.classList.remove('opacity-0');
-            }, 2500); // A splash screen some após 2.5 segundos
+            }, 2500);
 
-            // --- LÓGICA DE NAVEGAÇÃO E DEMAIS FUNÇÕES ---
-            const views = ['view-home', 'view-lancamento', 'view-cadastro-pasto', 'view-config'];
-            const navLinks = document.querySelectorAll('.nav-link');
-            let localPastos = [];
-            let localLancamentos = [];
-            let lotacaoChartInstance, categoriaChartInstance;
+            // --- INICIALIZAÇÃO E LÓGICA PRINCIPAL DO APP ---
+            try {
+                // --- INICIALIZAÇÃO E AUTENTICAÇÃO SEGURA DO FIREBASE ---
+                let firebaseConfig;
 
-            function showView(viewId) {
-                views.forEach(id => document.getElementById(id).classList.add('hidden'));
-                document.getElementById(viewId).classList.remove('hidden');
-                
-                navLinks.forEach(link => {
-                    if (link.dataset.view === viewId) {
-                        link.classList.add('bottom-nav-active');
-                    } else {
-                        link.classList.remove('bottom-nav-active');
-                    }
-                });
-            }
-            
-            navLinks.forEach(link => link.addEventListener('click', () => showView(link.dataset.view)));
-
-            // --- LÓGICA DO DASHBOARD ---
-            const totalGadoEl = document.getElementById('total-gado');
-            const totalPastosEl = document.getElementById('total-pastos');
-            const pesoMedioEl = document.getElementById('peso-medio');
-            
-            function updateDashboard() {
-                const totalGado = localLancamentos.reduce((sum, lanc) => sum + Number(lanc.quantidade), 0);
-                totalGadoEl.textContent = totalGado;
-                totalPastosEl.textContent = localPastos.length;
-                
-                const totalPeso = localLancamentos.reduce((sum, lanc) => sum + (Number(lanc.pesoKg) * Number(lanc.quantidade)), 0);
-                const pesoMedio = totalGado > 0 ? (totalPeso / totalGado) : 0;
-                pesoMedioEl.textContent = `${pesoMedio.toFixed(1)} kg`;
-
-                const lotacaoData = localPastos.map(pasto => {
-                    const gadoNoPasto = localLancamentos
-                        .filter(lanc => lanc.pastoId === pasto.id)
-                        .reduce((sum, lanc) => sum + Number(lanc.quantidade), 0);
-                    return { nome: pasto.nome, total: gadoNoPasto };
-                }).sort((a, b) => b.total - a.total).slice(0, 5);
-
-                const lotacaoCtx = document.getElementById('lotacaoChart').getContext('2d');
-                if(lotacaoChartInstance) lotacaoChartInstance.destroy();
-                lotacaoChartInstance = new Chart(lotacaoCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: lotacaoData.map(d => d.nome),
-                        datasets: [{
-                            label: 'Qtd. de Gado',
-                            data: lotacaoData.map(d => d.total),
-                            backgroundColor: 'rgba(79, 70, 229, 0.8)',
-                            borderColor: 'rgba(79, 70, 229, 1)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: { 
-                        indexAxis: 'y', 
-                        responsive: true, 
-                        maintainAspectRatio: false 
-                    }
-                });
-
-                const categoriaData = localLancamentos.reduce((acc, lanc) => {
-                    acc[lanc.categoria] = (acc[lanc.categoria] || 0) + Number(lanc.quantidade);
-                    return acc;
-                }, {});
-
-                const categoriaCtx = document.getElementById('categoriaChart').getContext('2d');
-                if(categoriaChartInstance) categoriaChartInstance.destroy();
-                categoriaChartInstance = new Chart(categoriaCtx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: Object.keys(categoriaData),
-                        datasets: [{
-                            data: Object.values(categoriaData),
-                            backgroundColor: ['#4f46e5', '#10b981', '#3b82f6', '#f59e0b', '#6b7280'],
-                        }]
-                    },
-                    options: { 
-                        responsive: true, 
-                        maintainAspectRatio: false 
-                    }
-                });
-            }
-
-            // --- LÓGICA DO CADASTRO DE PASTO ---
-            const pastoForm = document.getElementById('pastoForm');
-            const inputPastoId = document.getElementById('pasto-id');
-            const inputPastoNome = document.getElementById('pasto-nome');
-            const messagePasto = document.getElementById('message-pasto');
-            const listaPastosContainer = document.getElementById('lista-pastos');
-            const pastoSubmitButton = document.getElementById('pasto-submit-button');
-            const pastoSelect = document.getElementById('pasto-select');
-
-            const qPastos = query(pastosCollection, orderBy("nome"));
-            onSnapshot(qPastos, (snapshot) => {
-                localPastos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                renderPastos(localPastos);
-                updatePastoSelect(localPastos);
-                updateDashboard();
-            });
-
-            function renderPastos(pastos) {
-                listaPastosContainer.innerHTML = '';
-                if (pastos.length === 0) {
-                    listaPastosContainer.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400">Nenhum pasto cadastrado.</p>';
-                    return;
+                if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+                    firebaseConfig = JSON.parse(__firebase_config);
+                    console.log("Usando configuração do Firebase injetada pelo ambiente.");
+                } else {
+                    console.warn("Configuração do Firebase não injetada. Usando configuração de demonstração como fallback.");
+                    firebaseConfig = {
+                        apiKey: "AIzaSyDft94N-EmDyUzmKBosCrV0Cq3_bK90PAU",
+                        authDomain: "pfa-teste.firebaseapp.com",
+                        projectId: "pfa-teste",
+                        storageBucket: "pfa-teste.appspot.com",
+                        messagingSenderId: "761644217947",
+                        appId: "1:761644217947:web:b595bac8db9cf2e371317e"
+                    };
                 }
-                pastos.forEach(pasto => {
-                    const item = document.createElement('div');
-                    item.className = 'flex items-center justify-between bg-gray-50 dark:bg-gray-700 p-3 rounded-md shadow-sm';
-                    item.innerHTML = `<span class="text-gray-800 dark:text-gray-200">${pasto.nome}</span><div class="space-x-2"><button data-id="${pasto.id}" class="edit-btn text-blue-500 hover:text-blue-700"><i class="fas fa-pencil-alt"></i></button><button data-id="${pasto.id}" class="delete-btn text-red-500 hover:text-red-700"><i class="fas fa-trash-alt"></i></button></div>`;
-                    listaPastosContainer.appendChild(item);
-                });
-            }
-            
-            function updatePastoSelect(pastos) {
-                const currentVal = pastoSelect.value;
-                pastoSelect.innerHTML = '<option value="">Selecione um pasto</option>';
-                pastos.forEach(pasto => {
-                    const option = document.createElement('option');
-                    option.value = pasto.id;
-                    option.textContent = pasto.nome;
-                    pastoSelect.appendChild(option);
-                });
-                if(localPastos.some(p => p.id === currentVal)) pastoSelect.value = currentVal;
-            }
+                
+                const app = initializeApp(firebaseConfig);
+                const db = getFirestore(app);
+                const auth = getAuth(app);
+                
+                setLogLevel('debug');
 
-            pastoForm.addEventListener('submit', async (event) => {
-                event.preventDefault();
-                const nome = inputPastoNome.value.trim();
-                const id = inputPastoId.value;
-                if (!nome) return;
-                pastoSubmitButton.disabled = true;
-                try {
-                    if (id) {
-                        await updateDoc(doc(db, "pastos", id), { nome });
-                        showMessage(messagePasto, 'Pasto atualizado!', 'success');
-                    } else {
-                        await addDoc(pastosCollection, { nome });
-                        showMessage(messagePasto, 'Pasto cadastrado!', 'success');
-                    }
-                    pastoForm.reset();
-                    inputPastoId.value = '';
-                } catch (e) {
-                    showMessage(messagePasto, "Ocorreu um erro.", 'error');
-                } finally {
-                    pastoSubmitButton.disabled = false;
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                    console.log("Autenticado com token customizado.");
+                } else {
+                    await signInAnonymously(auth);
+                    console.log("Autenticado anonimamente.");
                 }
-            });
-            
-            listaPastosContainer.addEventListener('click', async (event) => {
-                const target = event.target.closest('button');
-                if (!target) return;
-                const id = target.dataset.id;
-                if (target.classList.contains('delete-btn')) {
-                    const q = query(lancamentosCollection, where("pastoId", "==", id));
-                    if (!(await getDocs(q)).empty) {
-                        showMessage(messagePasto, 'Pasto em uso, não pode ser excluído.', 'error');
+
+                const appId = typeof __app_id !== 'undefined' ? __app_id : 'pfa-app-default';
+                const userId = auth.currentUser?.uid || 'anonymous_user';
+
+                const pastosCollection = collection(db, `artifacts/${appId}/users/${userId}/pastos`);
+                const lancamentosCollection = collection(db, `artifacts/${appId}/users/${userId}/lancamentos`);
+                
+                // --- INÍCIO DA LÓGICA DO APLICATIVO ---
+
+                const htmlElement = document.documentElement;
+                const themeToggle = document.getElementById('theme-toggle');
+                const themeIcon = themeToggle.querySelector('i');
+                
+                const applyTheme = (theme) => {
+                    localStorage.setItem('theme', theme);
+                    if (theme === 'dark') {
+                        htmlElement.classList.add('dark');
+                        themeIcon.classList.remove('fa-moon');
+                        themeIcon.classList.add('fa-sun');
+                    } else {
+                        htmlElement.classList.remove('dark');
+                        themeIcon.classList.remove('fa-sun');
+                        themeIcon.classList.add('fa-moon');
+                    }
+                    updateChartColors(theme);
+                };
+
+                themeToggle.addEventListener('click', () => {
+                    const currentTheme = localStorage.getItem('theme') || 'light';
+                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                    applyTheme(newTheme);
+                });
+
+                const views = ['view-home', 'view-pastos', 'view-lancamento-form', 'view-cadastro-pasto', 'view-config', 'view-historico'];
+                const navLinks = document.querySelectorAll('.nav-link');
+                const addLancamentoFab = document.getElementById('add-lancamento-fab');
+                let localPastos = [];
+                let localLancamentos = [];
+                let lotacaoChartInstance, categoriaChartInstance;
+
+                function showView(viewId) {
+                    views.forEach(id => document.getElementById(id).classList.add('hidden'));
+                    document.getElementById(viewId).classList.remove('hidden');
+                    
+                    navLinks.forEach(link => {
+                        link.classList.toggle('bottom-nav-active', link.dataset.view === viewId);
+                    });
+
+                    addLancamentoFab.classList.toggle('hidden', viewId !== 'view-pastos');
+                }
+                
+                navLinks.forEach(link => link.addEventListener('click', () => showView(link.dataset.view)));
+                
+                const historyButton = document.getElementById('history-button');
+                historyButton.addEventListener('click', () => showPastoHistory(null)); // null para histórico geral
+
+                document.getElementById('back-to-pastos-button').addEventListener('click', () => {
+                    resetLancamentoForm();
+                    showView('view-pastos');
+                });
+                document.getElementById('back-to-pastos-from-history-button').addEventListener('click', () => showView('view-pastos'));
+
+                const totalGadoEl = document.getElementById('total-gado');
+                const totalPastosEl = document.getElementById('total-pastos');
+                const pesoMedioEl = document.getElementById('peso-medio');
+                const timelinePastoSelect = document.getElementById('timeline-pasto-select');
+                const timelineContainer = document.getElementById('timeline-container');
+
+                function updateChartColors(theme) {
+                    const textColor = theme === 'dark' ? '#d1d5db' : '#374151';
+                    const gridColor = theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+
+                    const updateOptions = (chart) => {
+                        if (!chart) return;
+                        chart.options.plugins.legend.labels.color = textColor;
+                        if (chart.options.scales.x) {
+                            chart.options.scales.x.ticks.color = textColor;
+                            chart.options.scales.x.grid.color = gridColor;
+                        }
+                        if (chart.options.scales.y) {
+                            chart.options.scales.y.ticks.color = textColor;
+                            chart.options.scales.y.grid.color = gridColor;
+                        }
+                        chart.update();
+                    };
+                    updateOptions(lotacaoChartInstance);
+                    updateOptions(categoriaChartInstance);
+                }
+                
+                function updateDashboard() {
+                    const entradas = localLancamentos.filter(l => l.tipo === 'entrada');
+                    let totalGado = 0;
+                    const lotacaoPorPasto = localPastos.reduce((acc, pasto) => {
+                        const movimentos = localLancamentos.filter(l => l.pastoId === pasto.id);
+                        const totalNoPasto = movimentos.reduce((sum, l) => sum + (l.tipo === 'entrada' ? Number(l.quantidade) : -Number(l.quantidade)), 0);
+                        acc[pasto.id] = totalNoPasto;
+                        totalGado += totalNoPasto;
+                        return acc;
+                    }, {});
+                    
+                    totalGadoEl.textContent = totalGado;
+                    totalPastosEl.textContent = localPastos.length;
+                    
+                    const totalPeso = entradas.reduce((sum, lanc) => sum + (Number(lanc.pesoKg) * Number(lanc.quantidade)), 0);
+                    const totalAnimaisEntrada = entradas.reduce((sum, lanc) => sum + Number(lanc.quantidade), 0);
+                    const pesoMedio = totalAnimaisEntrada > 0 ? (totalPeso / totalAnimaisEntrada) : 0;
+                    pesoMedioEl.textContent = `${pesoMedio.toFixed(1)} kg`;
+
+                    const lotacaoData = Object.entries(lotacaoPorPasto).map(([pastoId, total]) => {
+                        const pasto = localPastos.find(p => p.id === pastoId);
+                        return { nome: pasto ? pasto.nome : 'N/A', total };
+                    }).sort((a, b) => b.total - a.total).slice(0, 5);
+
+                    const lotacaoCtx = document.getElementById('lotacaoChart').getContext('2d');
+                    if(lotacaoChartInstance) lotacaoChartInstance.destroy();
+                    lotacaoChartInstance = new Chart(lotacaoCtx, {
+                        type: 'bar', data: {
+                            labels: lotacaoData.map(d => d.nome),
+                            datasets: [{ label: 'Qtd. de Gado', data: lotacaoData.map(d => d.total), backgroundColor: 'rgba(234, 179, 8, 0.8)' }]
+                        },
+                        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false }
+                    });
+
+                    const categoriaRebanho = localLancamentos.reduce((acc, lanc) => {
+                        const qtd = Number(lanc.quantidade);
+                        const valor = lanc.tipo === 'entrada' ? qtd : -qtd;
+                        acc[lanc.categoria] = (acc[lanc.categoria] || 0) + valor;
+                        return acc;
+                    }, {});
+
+                    const categoriaCtx = document.getElementById('categoriaChart').getContext('2d');
+                    if(categoriaChartInstance) categoriaChartInstance.destroy();
+                    categoriaChartInstance = new Chart(categoriaCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: Object.keys(categoriaRebanho),
+                            datasets: [{ data: Object.values(categoriaRebanho), backgroundColor: ['#EAB308', '#F59E0B', '#FBBF24', '#FCD34D', '#6b7280'] }]
+                        },
+                        options: { responsive: true, maintainAspectRatio: false }
+                    });
+                    updateChartColors(localStorage.getItem('theme') || 'light');
+                }
+
+                function renderTimeline(pastoId) {
+                    timelineContainer.innerHTML = '';
+                    if (!pastoId) {
+                        timelineContainer.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400">Selecione um pasto para ver a linha do tempo.</p>';
                         return;
                     }
-                    await deleteDoc(doc(db, "pastos", id));
-                } else if (target.classList.contains('edit-btn')) {
-                    const pasto = localPastos.find(p => p.id === id);
-                    inputPastoId.value = pasto.id;
-                    inputPastoNome.value = pasto.nome;
-                    pastoSubmitButton.textContent = 'Salvar Alterações';
-                }
-            });
-
-            // --- LÓGICA DO FORMULÁRIO DE LANÇAMENTO ---
-            const lancamentoForm = document.getElementById('lancamentoForm');
-            const lancamentoIdInput = document.getElementById('lancamento-id');
-            const pesoKgInput = document.getElementById('peso_medio_kg');
-            const pesoArrobaDisplay = document.getElementById('peso_arroba_display');
-            const dataLancamentoInput = document.getElementById('data_lancamento');
-            const messageLancamento = document.getElementById('message-lancamento');
-            const listaLancamentosContainer = document.getElementById('lista-lancamentos');
-            const lancamentoSubmitButton = document.getElementById('lancamento-submit-button');
-
-            const qLancamentos = query(lancamentosCollection, orderBy("data", "desc"));
-            onSnapshot(qLancamentos, (snapshot) => {
-                localLancamentos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                renderLancamentos(localLancamentos);
-                updateDashboard();
-            });
-
-            function renderLancamentos(lancamentos) {
-                listaLancamentosContainer.innerHTML = '';
-                if (lancamentos.length === 0) {
-                    listaLancamentosContainer.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400">Nenhum lançamento.</p>';
-                } else {
-                    lancamentos.forEach(lanc => {
-                        const pasto = localPastos.find(p => p.id === lanc.pastoId);
-                        const dataF = new Date(lanc.data).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-                        const item = document.createElement('div');
-                        item.className = 'bg-gray-50 dark:bg-gray-700 p-3 rounded-md shadow-sm grid grid-cols-3 md:grid-cols-6 gap-2 items-center text-sm';
-                        item.innerHTML = `
-                            <div class="font-semibold text-gray-800 dark:text-gray-200 col-span-2 md:col-span-1">${pasto ? pasto.nome : 'N/A'}</div>
-                            <div class="text-gray-600 dark:text-gray-300">${lanc.categoria}</div>
-                            <div class="text-gray-600 dark:text-gray-300 text-center">${lanc.quantidade}</div>
-                            <div class="text-gray-600 dark:text-gray-300 text-center">${lanc.pesoKg} kg</div>
-                            <div class="text-gray-600 dark:text-gray-300 text-center">${dataF}</div>
-                            <div class="space-x-2 text-right">
-                                <button data-id="${lanc.id}" class="edit-lanc-btn text-blue-500 hover:text-blue-700"><i class="fas fa-pencil-alt"></i></button>
-                                <button data-id="${lanc.id}" class="delete-lanc-btn text-red-500 hover:text-red-700"><i class="fas fa-trash-alt"></i></button>
-                            </div>`;
-                        listaLancamentosContainer.appendChild(item);
+                    const movimentos = localLancamentos.filter(lanc => lanc.pastoId === pastoId).sort((a, b) => new Date(b.data) - new Date(a.data));
+                    if (movimentos.length === 0) {
+                        timelineContainer.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400">Nenhuma movimentação para este pasto.</p>';
+                        return;
+                    }
+                    movimentos.forEach(mov => {
+                        const isEntrada = mov.tipo === 'entrada';
+                        const dataF = new Date(mov.data).toLocaleString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+                        const eventEl = document.createElement('div');
+                        eventEl.className = 'relative';
+                        eventEl.innerHTML = `
+                            <div class="absolute w-4 h-4 rounded-full -left-[25px] mt-1.5 ${isEntrada ? 'bg-green-500' : 'bg-red-500'} border-4 border-white dark:border-zinc-900"></div>
+                            <div class="p-4 rounded-lg shadow-sm bg-gray-50 dark:bg-zinc-800/50">
+                                <time class="text-sm font-normal text-gray-500 dark:text-gray-400">${dataF}</time>
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">${isEntrada ? 'Entrada' : 'Saída'} de ${mov.quantidade} ${mov.categoria}(s)</h3>
+                            </div>
+                        `;
+                        timelineContainer.appendChild(eventEl);
                     });
                 }
-            }
 
-            function converterParaArroba() {
-                const pesoKg = parseFloat(pesoKgInput.value) || 0;
-                pesoArrobaDisplay.textContent = `${(pesoKg / 15).toFixed(2)} @`;
-            }
+                timelinePastoSelect.addEventListener('change', (e) => renderTimeline(e.target.value));
 
-            function setDataHoraAtual() {
-                const now = new Date();
-                now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-                dataLancamentoInput.value = now.toISOString().slice(0, 16);
-            }
-            
-            function resetLancamentoForm() {
-                lancamentoForm.reset();
-                lancamentoIdInput.value = '';
-                lancamentoSubmitButton.textContent = 'Salvar Lançamento';
-                converterParaArroba();
-                setDataHoraAtual();
-            }
+                const pastoForm = document.getElementById('pastoForm');
+                const inputPastoId = document.getElementById('pasto-id');
+                const inputPastoNome = document.getElementById('pasto-nome');
+                const messagePasto = document.getElementById('message-pasto');
+                const listaPastosContainer = document.getElementById('lista-pastos');
+                const pastoSubmitButton = document.getElementById('pasto-submit-button');
+                const pastoSelect = document.getElementById('pasto-select');
 
-            pesoKgInput.addEventListener('input', converterParaArroba);
+                onSnapshot(query(pastosCollection, orderBy("nome")), (snapshot) => {
+                    localPastos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    renderPastos(localPastos);
+                    updatePastoSelect(localPastos);
+                    updatePastoSelect(localPastos, timelinePastoSelect);
+                    if (!timelinePastoSelect.value && localPastos.length > 0) {
+                        timelinePastoSelect.value = localPastos[0].id;
+                    }
+                    renderTimeline(timelinePastoSelect.value);
+                    renderPastosSummary();
+                    updateDashboard();
+                });
 
-            lancamentoForm.addEventListener('submit', async (event) => {
-                event.preventDefault();
-                const id = lancamentoIdInput.value;
-                const lancamentoData = {
-                    pastoId: document.getElementById('pasto-select').value,
-                    categoria: document.getElementById('categoria-gado').value,
-                    quantidade: document.getElementById('quantidade_gado').value,
-                    data: document.getElementById('data_lancamento').value,
-                    pesoKg: document.getElementById('peso_medio_kg').value
-                };
+                function renderPastos(pastos) {
+                    listaPastosContainer.innerHTML = '';
+                    if (pastos.length === 0) {
+                        listaPastosContainer.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400">Nenhum pasto cadastrado.</p>';
+                        return;
+                    }
+                    pastos.forEach(pasto => {
+                        const item = document.createElement('div');
+                        item.className = 'flex items-center justify-between bg-white dark:bg-zinc-800 p-3 rounded-md shadow-sm border border-gray-200 dark:border-zinc-700';
+                        item.innerHTML = `<span class="text-gray-800 dark:text-gray-200">${pasto.nome}</span><div class="space-x-2"><button data-id="${pasto.id}" class="edit-btn text-blue-500 hover:text-blue-700"><i class="fas fa-pencil-alt"></i></button><button data-id="${pasto.id}" class="delete-btn text-red-500 hover:text-red-700"><i class="fas fa-trash-alt"></i></button></div>`;
+                        listaPastosContainer.appendChild(item);
+                    });
+                }
                 
-                if (!lancamentoData.pastoId || !lancamentoData.quantidade || !lancamentoData.pesoKg) {
-                    showMessage(messageLancamento, 'Preencha todos os campos.', 'error');
-                    return;
+                function updatePastoSelect(pastos, selectElement = pastoSelect) {
+                    const currentVal = selectElement.value;
+                    selectElement.innerHTML = `<option value="">Selecione um pasto</option>`;
+                    pastos.forEach(pasto => {
+                        const option = document.createElement('option');
+                        option.value = pasto.id;
+                        option.textContent = pasto.nome;
+                        selectElement.appendChild(option);
+                    });
+                    if(localPastos.some(p => p.id === currentVal)) selectElement.value = currentVal;
                 }
 
-                try {
-                    lancamentoSubmitButton.disabled = true;
-                    if (id) {
-                        await updateDoc(doc(db, "lancamentos", id), lancamentoData);
-                        showMessage(messageLancamento, 'Lançamento atualizado!', 'success');
+                pastoForm.addEventListener('submit', async (event) => {
+                    event.preventDefault();
+                    const nome = inputPastoNome.value.trim();
+                    const id = inputPastoId.value;
+                    if (!nome) return;
+                    pastoSubmitButton.disabled = true;
+                    try {
+                        const docRef = id ? doc(db, `artifacts/${appId}/users/${userId}/pastos`, id) : doc(pastosCollection);
+                        await setDoc(docRef, { nome }, { merge: !id });
+                        
+                        pastoForm.reset();
+                        inputPastoId.value = '';
+                        pastoSubmitButton.textContent = 'Cadastrar';
+                    } finally {
+                        pastoSubmitButton.disabled = false;
+                    }
+                });
+                
+                listaPastosContainer.addEventListener('click', async (event) => {
+                    const target = event.target.closest('button');
+                    if (!target) return;
+                    const id = target.dataset.id;
+                    if (target.classList.contains('delete-btn')) {
+                        const q = query(lancamentosCollection, where("pastoId", "==", id));
+                        if (!(await getDocs(q)).empty) {
+                            showMessage(messagePasto, 'Pasto em uso, não pode ser excluído.', 'error');
+                            return;
+                        }
+                        showConfirmModal(async () => {
+                            await deleteDoc(doc(db, `artifacts/${appId}/users/${userId}/pastos`, id));
+                        });
+                    } else if (target.classList.contains('edit-btn')) {
+                        const pasto = localPastos.find(p => p.id === id);
+                        inputPastoId.value = pasto.id;
+                        inputPastoNome.value = pasto.nome;
+                        pastoSubmitButton.textContent = 'Salvar Alterações';
+                        inputPastoNome.focus();
+                    }
+                });
+
+                const lancamentoForm = document.getElementById('lancamentoForm');
+                const pesoKgInput = document.getElementById('peso_medio_kg');
+                const pesoArrobaDisplay = document.getElementById('peso_arroba_display');
+                const dataLancamentoInput = document.getElementById('data_lancamento');
+                const messageLancamento = document.getElementById('message-lancamento');
+                const listaHistoricoContainer = document.getElementById('lista-historico');
+                const lancamentoSubmitButton = document.getElementById('lancamento-submit-button');
+                const pesoSection = document.getElementById('peso-section');
+
+                document.querySelectorAll('input[name="tipo_movimentacao"]').forEach(radio => {
+                    radio.addEventListener('change', (e) => {
+                        const isSaida = e.target.value === 'saida';
+                        pesoSection.classList.toggle('hidden', isSaida);
+                        pesoKgInput.required = !isSaida;
+                    });
+                });
+
+                onSnapshot(query(lancamentosCollection, orderBy("data", "desc")), (snapshot) => {
+                    localLancamentos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    // A função renderHistorico agora é chamada dinamicamente
+                    updateDashboard();
+                    renderTimeline(timelinePastoSelect.value);
+                    renderPastosSummary();
+                });
+
+                function renderHistorico(lancamentos) {
+                    listaHistoricoContainer.innerHTML = '';
+                    if (lancamentos.length === 0) {
+                        listaHistoricoContainer.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400">Nenhum lançamento.</p>';
                     } else {
+                        lancamentos.forEach(lanc => {
+                            const pasto = localPastos.find(p => p.id === lanc.pastoId);
+                            const dataF = new Date(lanc.data).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                            const isEntrada = lanc.tipo === 'entrada';
+                            const item = document.createElement('div');
+                            item.className = `p-3 rounded-md shadow-sm grid grid-cols-5 gap-2 items-center text-sm ${isEntrada ? 'bg-green-50 dark:bg-green-900/30' : 'bg-red-50 dark:bg-red-900/30'} border ${isEntrada ? 'border-green-200 dark:border-green-800' : 'border-red-200 dark:border-red-800'}`;
+                            item.innerHTML = `
+                                <div class="font-semibold ${isEntrada ? 'text-green-700 dark:text-green-300' : 'text-red-700 dark:text-red-300'}">
+                                    <i class="fas ${isEntrada ? 'fa-arrow-up' : 'fa-arrow-down'} mr-2"></i>${isEntrada ? 'Entrada' : 'Saída'}
+                                </div>
+                                <div class="text-gray-800 dark:text-gray-200">${pasto ? pasto.nome : 'N/A'}</div>
+                                <div class="text-gray-600 dark:text-gray-300">${lanc.categoria}</div>
+                                <div class="text-gray-600 dark:text-gray-300 text-center">${lanc.quantidade}</div>
+                                <div class="text-gray-600 dark:text-gray-300 text-right">${dataF}</div>
+                            `;
+                            listaHistoricoContainer.appendChild(item);
+                        });
+                    }
+                }
+
+                function converterParaArroba() {
+                    const pesoKg = parseFloat(pesoKgInput.value) || 0;
+                    pesoArrobaDisplay.textContent = `${(pesoKg / 15).toFixed(2)} @`;
+                }
+
+                function setDataHoraAtual() {
+                    const now = new Date();
+                    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+                    dataLancamentoInput.value = now.toISOString().slice(0, 16);
+                }
+                
+                function resetLancamentoForm() {
+                    lancamentoForm.reset();
+                    document.getElementById('tipo-entrada').checked = true;
+                    pesoSection.classList.remove('hidden');
+                    pesoKgInput.required = true;
+                    lancamentoSubmitButton.textContent = 'Salvar Lançamento';
+                    pastoSelect.disabled = false; // Garante que o select seja reativado
+                    converterParaArroba();
+                    setDataHoraAtual();
+                }
+
+                pesoKgInput.addEventListener('input', converterParaArroba);
+
+                lancamentoForm.addEventListener('submit', async (event) => {
+                    event.preventDefault();
+                    const tipo = document.querySelector('input[name="tipo_movimentacao"]:checked').value;
+                    const lancamentoData = {
+                        tipo: tipo,
+                        pastoId: document.getElementById('pasto-select').value,
+                        categoria: document.getElementById('categoria-gado').value,
+                        quantidade: document.getElementById('quantidade_gado').value,
+                        data: document.getElementById('data_lancamento').value,
+                        pesoKg: tipo === 'entrada' ? document.getElementById('peso_medio_kg').value : 0
+                    };
+                    
+                    if (!lancamentoData.pastoId || !lancamentoData.quantidade || (tipo === 'entrada' && !lancamentoData.pesoKg)) {
+                        showMessage(messageLancamento, 'Preencha todos os campos.', 'error');
+                        return;
+                    }
+
+                    try {
+                        lancamentoSubmitButton.disabled = true;
                         await addDoc(lancamentosCollection, lancamentoData);
                         showMessage(messageLancamento, 'Lançamento salvo!', 'success');
+                        resetLancamentoForm();
+                        showView('view-pastos');
+                    } catch(e) {
+                        showMessage(messageLancamento, 'Ocorreu um erro.', 'error');
+                    } finally {
+                        lancamentoSubmitButton.disabled = false;
                     }
-                    resetLancamentoForm();
-                } catch(e) {
-                    showMessage(messageLancamento, 'Ocorreu um erro.', 'error');
-                } finally {
-                    lancamentoSubmitButton.disabled = false;
+                });
+                
+                function showMessage(element, message, type = 'success') {
+                    element.textContent = message;
+                    element.className = 'p-4 text-sm rounded-lg';
+                    const successClasses = 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-200';
+                    const errorClasses = 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200';
+                    element.classList.add(...(type === 'success' ? successClasses.split(' ') : errorClasses.split(' ')));
+                    element.classList.remove('hidden');
+                    setTimeout(() => element.classList.add('hidden'), 4000);
                 }
-            });
-            
-            listaLancamentosContainer.addEventListener('click', async (event) => {
-                const target = event.target.closest('button');
-                if (!target) return;
-                const id = target.dataset.id;
-                if (target.classList.contains('delete-lanc-btn')) {
-                    await deleteDoc(doc(db, "lancamentos", id));
-                } else if (target.classList.contains('edit-lanc-btn')) {
-                    const lanc = localLancamentos.find(l => l.id === id);
-                    if (lanc) {
-                        lancamentoIdInput.value = lanc.id;
-                        document.getElementById('pasto-select').value = lanc.pastoId;
-                        document.getElementById('categoria-gado').value = lanc.categoria;
-                        document.getElementById('quantidade_gado').value = lanc.quantidade;
-                        document.getElementById('data_lancamento').value = lanc.data;
-                        document.getElementById('peso_medio_kg').value = lanc.pesoKg;
-                        lancamentoSubmitButton.textContent = 'Salvar Alterações';
-                        converterParaArroba();
-                        window.scrollTo(0, 0);
-                    }
-                }
-            });
-            
-            function showMessage(element, message, type = 'success') {
-                element.textContent = message;
-                element.className = 'p-4 text-sm rounded-lg';
-                const successClasses = 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-200';
-                const errorClasses = 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200';
-                element.classList.add(...(type === 'success' ? successClasses.split(' ') : errorClasses.split(' ')));
-                element.classList.remove('hidden');
-                setTimeout(() => element.classList.add('hidden'), 4000);
-            }
 
-            // --- ESTADO INICIAL ---
-            showView('view-home');
-            setDataHoraAtual();
+                const pastosSummaryContainer = document.getElementById('pastos-summary-container');
+                const copyStatusButton = document.getElementById('copy-status-button');
+                let summaryData = [];
+
+                function getPastosSummaryData() {
+                    summaryData = localPastos.map(pasto => {
+                        const movimentos = localLancamentos.filter(l => l.pastoId === pasto.id);
+                        const entradas = movimentos.filter(m => m.tipo === 'entrada');
+                        const totalAnimais = movimentos.reduce((sum, l) => sum + (l.tipo === 'entrada' ? Number(l.quantidade) : -Number(l.quantidade)), 0);
+                        const totalPesoKg = entradas.reduce((sum, l) => sum + (Number(l.pesoKg) * Number(l.quantidade)), 0);
+                        const totalAnimaisEntrada = entradas.reduce((sum, l) => sum + Number(l.quantidade), 0);
+                        const pesoMedioKg = totalAnimais > 0 && totalAnimaisEntrada > 0 ? (totalPesoKg / totalAnimaisEntrada) : 0;
+                        const pesoMedioArroba = pesoMedioKg / 15;
+                        const ultimaAtualizacao = movimentos.length > 0 ? new Date(movimentos.sort((a, b) => new Date(b.data) - new Date(a.data))[0].data) : null;
+                        
+                        return { id: pasto.id, nome: pasto.nome, totalAnimais, pesoMedioKg, pesoMedioArroba, ultimaAtualizacao };
+                    });
+                    return summaryData;
+                }
+
+                function renderPastosSummary() {
+                    const data = getPastosSummaryData();
+                    pastosSummaryContainer.innerHTML = '';
+                    if (data.length === 0) {
+                        pastosSummaryContainer.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400 col-span-full">Nenhum pasto para exibir. Cadastre um pasto para começar.</p>';
+                        return;
+                    }
+                    data.forEach(pasto => {
+                        if (pasto.totalAnimais <= 0) return;
+                        const dataF = pasto.ultimaAtualizacao ? `Atualizado em: ${pasto.ultimaAtualizacao.toLocaleDateString('pt-BR', {day: '2-digit', month: '2-digit'})}` : 'Sem movimentação';
+                        const card = document.createElement('div');
+                        card.className = 'pasto-card bg-white dark:bg-zinc-900 p-4 rounded-lg shadow border border-gray-200 dark:border-zinc-800 space-y-2 relative';
+                        card.dataset.pastoId = pasto.id;
+                        card.dataset.pastoNome = pasto.nome;
+                        card.innerHTML = `
+                            <button class="quick-launch-btn absolute top-2 right-2 bg-yellow-400 hover:bg-yellow-500 text-black w-8 h-8 rounded-full flex items-center justify-center shadow z-10">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <div class="card-content">
+                                <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">${pasto.nome}</h3>
+                                <p class="text-2xl font-semibold text-gray-800 dark:text-gray-200">${pasto.totalAnimais} <span class="text-base font-medium">animais</span></p>
+                                <div class="text-sm text-gray-600 dark:text-gray-400">
+                                    <span>${pasto.pesoMedioArroba.toFixed(1)}@</span> / <span>${pasto.pesoMedioKg.toFixed(1)} kg</span>
+                                </div>
+                                <p class="text-xs text-gray-400 dark:text-gray-500 pt-2">${dataF}</p>
+                            </div>
+                        `;
+                        pastosSummaryContainer.appendChild(card);
+                    });
+                }
+                
+                pastosSummaryContainer.addEventListener('click', (event) => {
+                    const card = event.target.closest('.pasto-card');
+                    if (!card) return;
+
+                    const pastoId = card.dataset.pastoId;
+                    const pastoNome = card.dataset.pastoNome;
+
+                    if (event.target.closest('.quick-launch-btn')) {
+                        // Clicou no botão de lançamento rápido
+                        resetLancamentoForm();
+                        pastoSelect.value = pastoId;
+                        pastoSelect.disabled = true;
+                        showView('view-lancamento-form');
+                    } else {
+                        // Clicou no card para ver o histórico
+                        showPastoHistory(pastoId, pastoNome);
+                    }
+                });
+
+                function showPastoHistory(pastoId, pastoNome) {
+                    const historicoTitle = document.getElementById('historico-title');
+                    let lancamentosFiltrados = localLancamentos;
+
+                    if (pastoId) {
+                        historicoTitle.textContent = `Histórico: ${pastoNome}`;
+                        lancamentosFiltrados = localLancamentos.filter(l => l.pastoId === pastoId);
+                    } else {
+                        historicoTitle.textContent = 'Histórico de Movimentações';
+                    }
+                    
+                    renderHistorico(lancamentosFiltrados);
+                    showView('view-historico');
+                }
+
+                addLancamentoFab.addEventListener('click', () => {
+                    resetLancamentoForm();
+                    showView('view-lancamento-form');
+                });
+
+
+                copyStatusButton.addEventListener('click', () => {
+                    const data = getPastosSummaryData();
+                    const dataAtual = new Date().toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                    const header = `*Situação dos Pastos - PFA*\n_${dataAtual}_\n\n`;
+                    const body = data.filter(p => p.totalAnimais > 0).map(p => {
+                        const dataF = p.ultimaAtualizacao ? `Atualizado em ${p.ultimaAtualizacao.toLocaleDateString('pt-BR', {day: '2-digit', month: '2-digit'})}` : '';
+                        return `*${p.nome}*: ${p.totalAnimais} animais - ${p.pesoMedioArroba.toFixed(1)}@ / ${p.pesoMedioKg.toFixed(1)}kg - ${dataF}`;
+                    }).join('\n');
+                    
+                    const textToCopy = header + body;
+                    const textArea = document.createElement('textarea');
+                    textArea.value = textToCopy;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        showToast("Situação copiada!");
+                    } catch (err) {
+                        showToast("Erro ao copiar.", true);
+                    }
+                    document.body.removeChild(textArea);
+                });
+
+                function showToast(message, isError = false) {
+                    const toast = document.getElementById('toast-notification');
+                    toast.textContent = message;
+                    toast.style.backgroundColor = isError ? '#ef4444' : '#22c55e';
+                    toast.classList.add('show');
+                    setTimeout(() => {
+                        toast.classList.remove('show');
+                    }, 3000);
+                }
+
+                const confirmModal = document.getElementById('confirm-modal');
+                const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+                const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+                let deleteCallback = null;
+
+                function showConfirmModal(callback) {
+                    deleteCallback = callback;
+                    confirmModal.classList.remove('hidden');
+                }
+
+                function hideConfirmModal() {
+                    deleteCallback = null;
+                    confirmModal.classList.add('hidden');
+                }
+
+                cancelDeleteBtn.addEventListener('click', hideConfirmModal);
+                confirmDeleteBtn.addEventListener('click', () => {
+                    if (deleteCallback) {
+                        deleteCallback();
+                    }
+                    hideConfirmModal();
+                });
+
+                const initialTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                applyTheme(initialTheme);
+                showView('view-home');
+                setDataHoraAtual();
+
+            } catch (error) {
+                console.error("Falha ao inicializar o aplicativo:", error);
+                const appWrapper = document.getElementById('app-wrapper');
+                if (appWrapper) {
+                    appWrapper.innerHTML = `<div class="text-center p-8 text-red-500">
+                        <h1 class="text-2xl font-bold">Erro na Inicialização</h1>
+                        <p class="mt-2">Não foi possível carregar os dados do aplicativo. Verifique o console para mais detalhes.</p>
+                    </div>`;
+                    appWrapper.classList.remove('opacity-0');
+                }
+            }
         });
     </script>
 
