@@ -210,7 +210,7 @@
             <div id="view-lancamento-form" class="hidden">
                  <div class="w-full max-w-4xl p-8 space-y-6 bg-white dark:bg-zinc-900 rounded-xl shadow-lg mx-auto border border-gray-200 dark:border-zinc-800">
                     <div class="flex justify-between items-center">
-                        <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Lançamento</h1>
+                        <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Lançamento em Lote</h1>
                         <button id="back-to-pastos-button" class="text-yellow-600 hover:text-yellow-700 dark:text-yellow-400 dark:hover:text-yellow-300">
                             <i class="fas fa-arrow-left mr-2"></i>Voltar
                         </button>
@@ -288,15 +288,70 @@
                  <div class="w-full max-w-md p-8 space-y-6 bg-white dark:bg-zinc-900 rounded-xl shadow-lg mx-auto border border-gray-200 dark:border-zinc-800">
                     <h1 class="text-3xl font-bold text-center text-gray-900 dark:text-gray-100">Cadastros</h1>
                     <div class="space-y-4 pt-4">
-                        <button id="show-pasto-cadastro-btn" class="w-full flex items-center justify-center py-4 px-4 border border-transparent rounded-md shadow-sm text-lg font-semibold text-black bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition duration-150 ease-in-out">
+                        <button id="show-gado-cadastro-btn" class="w-full flex items-center justify-center py-4 px-4 border border-transparent rounded-md shadow-lg text-lg font-semibold text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition duration-150 ease-in-out">
+                            <i class="fas fa-paw mr-3"></i> Cadastro Individual de Gado
+                        </button>
+                        <div class="border-t border-gray-200 dark:border-zinc-700 my-4"></div>
+                        <button id="show-pasto-cadastro-btn" class="w-full flex items-center justify-center py-3 px-4 border border-gray-300 dark:border-zinc-600 rounded-md shadow-sm text-md font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition duration-150 ease-in-out">
                             <i class="fas fa-map-marked-alt mr-3"></i> Gerenciar Pastos
                         </button>
-                        <button id="show-brinco-cadastro-btn" class="w-full flex items-center justify-center py-4 px-4 border border-transparent rounded-md shadow-sm text-lg font-semibold text-black bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition duration-150 ease-in-out">
+                        <button id="show-brinco-cadastro-btn" class="w-full flex items-center justify-center py-3 px-4 border border-gray-300 dark:border-zinc-600 rounded-md shadow-sm text-md font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition duration-150 ease-in-out">
                             <i class="fas fa-tag mr-3"></i> Gerenciar Brincos
                         </button>
-                        <button id="show-raca-cadastro-btn" class="w-full flex items-center justify-center py-4 px-4 border border-transparent rounded-md shadow-sm text-lg font-semibold text-black bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition duration-150 ease-in-out">
+                        <button id="show-raca-cadastro-btn" class="w-full flex items-center justify-center py-3 px-4 border border-gray-300 dark:border-zinc-600 rounded-md shadow-sm text-md font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition duration-150 ease-in-out">
                             <i class="fas fa-dna mr-3"></i> Gerenciar Raças
                         </button>
+                        <button id="show-vacina-cadastro-btn" class="w-full flex items-center justify-center py-3 px-4 border border-gray-300 dark:border-zinc-600 rounded-md shadow-sm text-md font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition duration-150 ease-in-out">
+                            <i class="fas fa-syringe mr-3"></i> Gerenciar Vacinas
+                        </button>
+                    </div>
+                 </div>
+            </div>
+
+            <!-- View: Cadastro de Gado -->
+            <div id="view-gado-form-container" class="hidden">
+                 <div class="w-full max-w-4xl p-8 space-y-6 bg-white dark:bg-zinc-900 rounded-xl shadow-lg mx-auto border border-gray-200 dark:border-zinc-800">
+                    <div class="flex justify-between items-center">
+                        <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Cadastro de Gado</h1>
+                        <button class="back-to-cadastros-hub text-yellow-600 hover:text-yellow-700 dark:text-yellow-400 dark:hover:text-yellow-300">
+                            <i class="fas fa-arrow-left mr-2"></i>Voltar
+                        </button>
+                    </div>
+                    <div id="message-gado" class="hidden p-4 text-sm rounded-lg" role="alert"></div>
+                    <form id="gadoForm" class="space-y-6" novalidate>
+                        <input type="hidden" id="gado-id">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="gado-brinco-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Brinco</label>
+                                <select id="gado-brinco-select" required class="mt-1 block w-full px-4 py-3 bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-zinc-700 rounded-md shadow-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"></select>
+                            </div>
+                            <div>
+                                <label for="gado-raca-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Raça</label>
+                                <select id="gado-raca-select" required class="mt-1 block w-full px-4 py-3 bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-zinc-700 rounded-md shadow-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"></select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="gado-peso-kg" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Peso (kg)</label>
+                                <input type="number" id="gado-peso-kg" step="0.1" placeholder="Ex: 380.5" required class="mt-1 block w-full px-4 py-3 bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-zinc-700 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm">
+                            </div>
+                             <div>
+                                <label for="gado-vacina-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Vacina (Opcional)</label>
+                                <select id="gado-vacina-select" class="mt-1 block w-full px-4 py-3 bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-zinc-700 rounded-md shadow-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"></select>
+                            </div>
+                        </div>
+                         <div>
+                            <label for="gado-data-vacina" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Data da Vacina (Opcional)</label>
+                            <input type="date" id="gado-data-vacina" class="mt-1 block w-full px-4 py-3 bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-zinc-700 rounded-md shadow-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <button type="submit" id="gado-submit-button" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-semibold text-black bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">Cadastrar Gado</button>
+                        </div>
+                    </form>
+                    <div class="border-t border-gray-200 dark:border-zinc-800 mt-6 pt-6"></div>
+                    <div class="space-y-3">
+                        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Gado Cadastrado</h2>
+                        <div id="lista-gado" class="space-y-3"><div class="loader"></div></div>
                     </div>
                  </div>
             </div>
@@ -387,6 +442,34 @@
                     </div>
                  </div>
             </div>
+            
+            <!-- View: Cadastro de Vacina -->
+            <div id="view-vacina-form-container" class="hidden">
+                 <div class="w-full max-w-md p-8 space-y-6 bg-white dark:bg-zinc-900 rounded-xl shadow-lg mx-auto border border-gray-200 dark:border-zinc-800">
+                    <div class="flex justify-between items-center">
+                        <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Cadastro de Vacina</h1>
+                        <button class="back-to-cadastros-hub text-yellow-600 hover:text-yellow-700 dark:text-yellow-400 dark:hover:text-yellow-300">
+                            <i class="fas fa-arrow-left mr-2"></i>Voltar
+                        </button>
+                    </div>
+                    <div id="message-vacina" class="hidden p-4 text-sm rounded-lg" role="alert"></div>
+                    <form id="vacinaForm" class="space-y-6" novalidate>
+                        <input type="hidden" id="vacina-id">
+                        <div>
+                            <label for="vacina-nome" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nome da Vacina</label>
+                            <input type="text" id="vacina-nome" placeholder="Ex: Febre Aftosa" required class="mt-1 block w-full px-4 py-3 bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-zinc-700 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <button type="submit" id="vacina-submit-button" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-semibold text-black bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">Cadastrar Vacina</button>
+                        </div>
+                    </form>
+                    <div class="border-t border-gray-200 dark:border-zinc-800 mt-6 pt-6"></div>
+                    <div class="space-y-3">
+                        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Vacinas Cadastradas</h2>
+                        <div id="lista-vacinas" class="space-y-3"><div class="loader"></div></div>
+                    </div>
+                 </div>
+            </div>
 
             <!-- View: Configurações -->
             <div id="view-config" class="hidden">
@@ -401,7 +484,7 @@
                             </button>
                         </div>
                         <div class="text-center pt-4">
-                            <p class="text-gray-600 dark:text-gray-400">Versão do Aplicativo: <span id="app-version" class="font-semibold text-gray-800 dark:text-gray-200">2.5</span></p>
+                            <p class="text-gray-600 dark:text-gray-400">Versão do Aplicativo: <span id="app-version" class="font-semibold text-gray-800 dark:text-gray-200">2.6</span></p>
                         </div>
                     </div>
                  </div>
@@ -458,7 +541,7 @@
     <script type="module">
         // Importações do Firebase SDK
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc, getDocs, query, where, orderBy, setLogLevel, setDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc, getDocs, query, where, orderBy, setLogLevel, setDoc, writeBatch, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         
         
@@ -479,13 +562,15 @@
                 if (typeof __firebase_config !== 'undefined' && __firebase_config) {
                     firebaseConfig = JSON.parse(__firebase_config);
                 } else {
+                    // Fallback para configuração de demonstração se não for injetada
+                    console.warn("Configuração do Firebase não injetada. Usando configuração de demonstração como fallback.");
                     firebaseConfig = {
-                        apiKey: "YOUR_API_KEY",
-                        authDomain: "YOUR_AUTH_DOMAIN",
-                        projectId: "YOUR_PROJECT_ID",
-                        storageBucket: "YOUR_STORAGE_BUCKET",
-                        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-                        appId: "YOUR_APP_ID"
+                        apiKey: "AIzaSyDft94N-EmDyUzmKBosCrV0Cq3_bK90PAU",
+                        authDomain: "pfa-teste.firebaseapp.com",
+                        projectId: "pfa-teste",
+                        storageBucket: "pfa-teste.appspot.com",
+                        messagingSenderId: "761644217947",
+                        appId: "1:761644217947:web:b595bac8db9cf2e371317e"
                     };
                 }
                 
@@ -508,6 +593,8 @@
                 const lancamentosCollection = collection(db, `artifacts/${appId}/users/${userId}/lancamentos`);
                 const brincosCollection = collection(db, `artifacts/${appId}/users/${userId}/brincos`);
                 const racasCollection = collection(db, `artifacts/${appId}/users/${userId}/racas`);
+                const vacinasCollection = collection(db, `artifacts/${appId}/users/${userId}/vacinas`);
+                const gadoCollection = collection(db, `artifacts/${appId}/users/${userId}/gado`);
                 
                 // --- INÍCIO DA LÓGICA DO APLICATIVO ---
 
@@ -535,13 +622,15 @@
                     applyTheme(newTheme);
                 });
 
-                const views = ['view-home', 'view-pastos', 'view-lancamento-form', 'view-cadastros', 'view-pasto-form-container', 'view-brinco-form-container', 'view-raca-form-container', 'view-config', 'view-historico'];
+                const views = ['view-home', 'view-pastos', 'view-lancamento-form', 'view-cadastros', 'view-pasto-form-container', 'view-brinco-form-container', 'view-raca-form-container', 'view-vacina-form-container', 'view-gado-form-container', 'view-config', 'view-historico'];
                 const navLinks = document.querySelectorAll('.nav-link');
                 const addLancamentoFab = document.getElementById('add-lancamento-fab');
                 let localPastos = [];
                 let localLancamentos = [];
                 let localBrincos = [];
                 let localRacas = [];
+                let localVacinas = [];
+                let localGado = [];
                 let lotacaoChartInstance, categoriaChartInstance;
 
                 function showView(viewId) {
@@ -549,7 +638,9 @@
                     document.getElementById(viewId).classList.remove('hidden');
                     
                     navLinks.forEach(link => {
-                        link.classList.toggle('bottom-nav-active', link.dataset.view === viewId);
+                        const isCadastrosView = viewId.includes('-form-container') || viewId === 'view-cadastros';
+                        const isLinkToCadastros = link.dataset.view === 'view-cadastros';
+                        link.classList.toggle('bottom-nav-active', isLinkToCadastros ? isCadastrosView : link.dataset.view === viewId);
                     });
 
                     const fabVisibleViews = ['view-pastos'];
@@ -559,9 +650,11 @@
                 navLinks.forEach(link => link.addEventListener('click', () => showView(link.dataset.view)));
                 
                 // --- Navegação Cadastros ---
+                document.getElementById('show-gado-cadastro-btn').addEventListener('click', () => showView('view-gado-form-container'));
                 document.getElementById('show-pasto-cadastro-btn').addEventListener('click', () => showView('view-pasto-form-container'));
                 document.getElementById('show-brinco-cadastro-btn').addEventListener('click', () => showView('view-brinco-form-container'));
                 document.getElementById('show-raca-cadastro-btn').addEventListener('click', () => showView('view-raca-form-container'));
+                document.getElementById('show-vacina-cadastro-btn').addEventListener('click', () => showView('view-vacina-form-container'));
                 document.querySelectorAll('.back-to-cadastros-hub').forEach(btn => {
                     btn.addEventListener('click', () => showView('view-cadastros'));
                 });
@@ -781,10 +874,12 @@
                 const messageRaca = document.getElementById('message-raca');
                 const listaRacasContainer = document.getElementById('lista-racas');
                 const racaSubmitButton = document.getElementById('raca-submit-button');
+                const gadoRacaSelect = document.getElementById('gado-raca-select');
 
                 onSnapshot(query(racasCollection, orderBy("nome")), (snapshot) => {
                     localRacas = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     renderRacas(localRacas);
+                    updateDynamicSelect(gadoRacaSelect, localRacas, 'uma raça');
                 });
 
                 function renderRacas(racas) {
@@ -834,7 +929,6 @@
                     if (!target) return;
                     const id = target.dataset.id;
                     if (target.classList.contains('delete-raca-btn')) {
-                        // Futuramente, adicionar verificação se a raça está em uso
                         showConfirmModal('Excluir Raça?', 'Deseja realmente excluir esta raça?', async () => {
                             await deleteDoc(doc(db, `artifacts/${appId}/users/${userId}/racas`, id));
                             showMessage(messageRaca, 'Raça excluída.', 'success');
@@ -845,6 +939,81 @@
                         inputRacaNome.value = raca.nome;
                         racaSubmitButton.textContent = 'Salvar Alterações';
                         inputRacaNome.focus();
+                    }
+                });
+                
+                // --- LÓGICA DE CADASTRO DE VACINAS ---
+                const vacinaForm = document.getElementById('vacinaForm');
+                const inputVacinaId = document.getElementById('vacina-id');
+                const inputVacinaNome = document.getElementById('vacina-nome');
+                const messageVacina = document.getElementById('message-vacina');
+                const listaVacinasContainer = document.getElementById('lista-vacinas');
+                const vacinaSubmitButton = document.getElementById('vacina-submit-button');
+                const gadoVacinaSelect = document.getElementById('gado-vacina-select');
+
+                onSnapshot(query(vacinasCollection, orderBy("nome")), (snapshot) => {
+                    localVacinas = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    renderVacinas(localVacinas);
+                    updateDynamicSelect(gadoVacinaSelect, localVacinas, 'uma vacina', true);
+                });
+
+                function renderVacinas(vacinas) {
+                    listaVacinasContainer.innerHTML = '';
+                    if (vacinas.length === 0) {
+                        listaVacinasContainer.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400">Nenhuma vacina cadastrada.</p>';
+                        return;
+                    }
+                    vacinas.forEach(vacina => {
+                        const item = document.createElement('div');
+                        item.className = 'flex items-center justify-between bg-white dark:bg-zinc-800 p-3 rounded-md shadow-sm border border-gray-200 dark:border-zinc-700';
+                        item.innerHTML = `<span class="text-gray-800 dark:text-gray-200">${vacina.nome}</span><div class="space-x-2"><button data-id="${vacina.id}" class="edit-vacina-btn text-blue-500 hover:text-blue-700"><i class="fas fa-pencil-alt"></i></button><button data-id="${vacina.id}" class="delete-vacina-btn text-red-500 hover:text-red-700"><i class="fas fa-trash-alt"></i></button></div>`;
+                        listaVacinasContainer.appendChild(item);
+                    });
+                }
+
+                vacinaForm.addEventListener('submit', async (event) => {
+                    event.preventDefault();
+                    const nome = inputVacinaNome.value.trim();
+                    const id = inputVacinaId.value;
+                    if (!nome) return;
+
+                    const isDuplicate = localVacinas.some(vacina => vacina.nome.toLowerCase() === nome.toLowerCase() && vacina.id !== id);
+                    if (isDuplicate) {
+                        showMessage(messageVacina, 'Esta vacina já está cadastrada.', 'error');
+                        return;
+                    }
+
+                    vacinaSubmitButton.disabled = true;
+                    try {
+                        const docRef = id ? doc(db, `artifacts/${appId}/users/${userId}/vacinas`, id) : doc(vacinasCollection);
+                        await setDoc(docRef, { nome }, { merge: !id });
+                        
+                        vacinaForm.reset();
+                        inputVacinaId.value = '';
+                        vacinaSubmitButton.textContent = 'Cadastrar Vacina';
+                        showMessage(messageVacina, id ? 'Vacina atualizada!' : 'Vacina cadastrada!', 'success');
+                    } catch(e) {
+                         showMessage(messageVacina, 'Ocorreu um erro.', 'error');
+                    } finally {
+                        vacinaSubmitButton.disabled = false;
+                    }
+                });
+
+                listaVacinasContainer.addEventListener('click', async (event) => {
+                    const target = event.target.closest('button');
+                    if (!target) return;
+                    const id = target.dataset.id;
+                    if (target.classList.contains('delete-vacina-btn')) {
+                        showConfirmModal('Excluir Vacina?', 'Deseja realmente excluir esta vacina?', async () => {
+                            await deleteDoc(doc(db, `artifacts/${appId}/users/${userId}/vacinas`, id));
+                            showMessage(messageVacina, 'Vacina excluída.', 'success');
+                        });
+                    } else if (target.classList.contains('edit-vacina-btn')) {
+                        const vacina = localVacinas.find(v => v.id === id);
+                        inputVacinaId.value = vacina.id;
+                        inputVacinaNome.value = vacina.nome;
+                        vacinaSubmitButton.textContent = 'Salvar Alterações';
+                        inputVacinaNome.focus();
                     }
                 });
 
@@ -959,10 +1128,13 @@
                 const brincoSubmitButton = document.getElementById('brinco-submit-button');
                 const listaBrincosContainer = document.getElementById('lista-brincos');
                 const messageBrinco = document.getElementById('message-brinco');
+                const gadoBrincoSelect = document.getElementById('gado-brinco-select');
 
                 onSnapshot(query(brincosCollection, orderBy("numero")), (snapshot) => {
                     localBrincos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     renderBrincos(localBrincos);
+                    const brincosDisponiveis = localBrincos.filter(b => b.status === 'disponivel');
+                    updateDynamicSelect(gadoBrincoSelect, brincosDisponiveis, 'um brinco', false, 'id', 'numero');
                 });
 
                 function renderBrincos(brincos) {
@@ -1046,6 +1218,132 @@
                     }
                 });
 
+                // --- LÓGICA DE CADASTRO DE GADO ---
+                const gadoForm = document.getElementById('gadoForm');
+                const gadoSubmitButton = document.getElementById('gado-submit-button');
+                const messageGado = document.getElementById('message-gado');
+                const listaGadoContainer = document.getElementById('lista-gado');
+
+                onSnapshot(query(gadoCollection, orderBy("brincoId")), (snapshot) => {
+                    localGado = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    renderGado(localGado);
+                });
+
+                function renderGado(gadoList) {
+                    listaGadoContainer.innerHTML = '';
+                    if (gadoList.length === 0) {
+                        listaGadoContainer.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400">Nenhum gado cadastrado.</p>';
+                        return;
+                    }
+                    gadoList.forEach(gado => {
+                        const brinco = localBrincos.find(b => b.id === gado.brincoId);
+                        const raca = localRacas.find(r => r.id === gado.racaId);
+                        const item = document.createElement('div');
+                        item.className = 'flex items-center justify-between bg-white dark:bg-zinc-800 p-3 rounded-md shadow-sm border border-gray-200 dark:border-zinc-700';
+                        item.innerHTML = `
+                            <div>
+                                <span class="font-bold text-gray-800 dark:text-gray-200">Brinco: ${brinco ? brinco.numero : 'N/A'}</span>
+                                <span class="text-sm text-gray-600 dark:text-gray-400 ml-4">${raca ? raca.nome : 'N/A'} - ${gado.pesoKg} kg</span>
+                            </div>
+                            <div class="space-x-2">
+                                <button data-id="${gado.id}" class="edit-gado-btn text-blue-500 hover:text-blue-700"><i class="fas fa-pencil-alt"></i></button>
+                                <button data-id="${gado.id}" data-brinco-id="${gado.brincoId}" class="delete-gado-btn text-red-500 hover:text-red-700"><i class="fas fa-trash-alt"></i></button>
+                            </div>`;
+                        listaGadoContainer.appendChild(item);
+                    });
+                }
+                
+                gadoForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const gadoId = document.getElementById('gado-id').value;
+                    const brincoId = document.getElementById('gado-brinco-select').value;
+                    const racaId = document.getElementById('gado-raca-select').value;
+                    const pesoKg = document.getElementById('gado-peso-kg').value;
+                    const vacinaId = document.getElementById('gado-vacina-select').value;
+                    const dataVacina = document.getElementById('gado-data-vacina').value;
+
+                    if (!brincoId || !racaId || !pesoKg) {
+                        showMessage(messageGado, 'Preencha Brinco, Raça e Peso.', 'error');
+                        return;
+                    }
+                    
+                    gadoSubmitButton.disabled = true;
+                    try {
+                        await runTransaction(db, async (transaction) => {
+                            const brincoRef = doc(db, `artifacts/${appId}/users/${userId}/brincos`, brincoId);
+                            const gadoRef = gadoId ? doc(db, `artifacts/${appId}/users/${userId}/gado`, gadoId) : doc(gadoCollection);
+
+                            const gadoData = { brincoId, racaId, pesoKg, vacinaId, dataVacina };
+                            transaction.set(gadoRef, gadoData, { merge: !!gadoId });
+                            transaction.update(brincoRef, { status: 'utilizado' });
+                        });
+
+                        showMessage(messageGado, 'Gado salvo com sucesso!', 'success');
+                        gadoForm.reset();
+                    } catch (error) {
+                        console.error("Erro ao salvar gado:", error);
+                        showMessage(messageGado, 'Erro ao salvar o gado.', 'error');
+                    } finally {
+                        gadoSubmitButton.disabled = false;
+                    }
+                });
+
+                listaGadoContainer.addEventListener('click', async (e) => {
+                    const target = e.target.closest('button');
+                    if (!target) return;
+                    const gadoId = target.dataset.id;
+
+                    if (target.classList.contains('delete-gado-btn')) {
+                        const brincoId = target.dataset.brincoId;
+                        showConfirmModal('Excluir Gado?', 'Isso irá liberar o brinco novamente.', async () => {
+                             try {
+                                await runTransaction(db, async (transaction) => {
+                                    const brincoRef = doc(db, `artifacts/${appId}/users/${userId}/brincos`, brincoId);
+                                    const gadoRef = doc(db, `artifacts/${appId}/users/${userId}/gado`, gadoId);
+                                    
+                                    transaction.update(brincoRef, { status: 'disponivel' });
+                                    transaction.delete(gadoRef);
+                                });
+                                showMessage(messageGado, 'Gado excluído e brinco liberado.', 'success');
+                            } catch (error) {
+                                console.error("Erro ao excluir gado:", error);
+                                showMessage(messageGado, 'Erro ao excluir o gado.', 'error');
+                            }
+                        });
+                    } else if (target.classList.contains('edit-gado-btn')) {
+                        const gado = localGado.find(g => g.id === gadoId);
+                        if (gado) {
+                            document.getElementById('gado-id').value = gado.id;
+                            // A lógica de edição precisa de mais detalhes, como lidar com a troca de brinco
+                            // Por enquanto, apenas preenche o formulário
+                            document.getElementById('gado-brinco-select').value = gado.brincoId;
+                            document.getElementById('gado-raca-select').value = gado.racaId;
+                            document.getElementById('gado-peso-kg').value = gado.pesoKg;
+                            document.getElementById('gado-vacina-select').value = gado.vacinaId || '';
+                            document.getElementById('gado-data-vacina').value = gado.dataVacina || '';
+                            gadoSubmitButton.textContent = 'Salvar Alterações';
+                            window.scrollTo(0, 0);
+                        }
+                    }
+                });
+
+                // --- FUNÇÕES UTILITÁRIAS ---
+                function updateDynamicSelect(selectElement, data, placeholder, optional = false, valueKey = 'id', textKey = 'nome') {
+                    const currentVal = selectElement.value;
+                    selectElement.innerHTML = `<option value="">Selecione ${placeholder}</option>`;
+                    if(optional) {
+                        selectElement.innerHTML = `<option value="">Nenhuma</option>`;
+                    }
+                    data.forEach(item => {
+                        const option = document.createElement('option');
+                        option.value = item[valueKey];
+                        option.textContent = item[textKey];
+                        selectElement.appendChild(option);
+                    });
+                    if (data.some(item => item[valueKey] === currentVal)) {
+                        selectElement.value = currentVal;
+                    }
+                }
 
                 function showMessage(element, message, type = 'success') {
                     element.textContent = message;
