@@ -484,7 +484,7 @@
                             </button>
                         </div>
                         <div class="text-center pt-4">
-                            <p class="text-gray-600 dark:text-gray-400">Versão do Aplicativo: <span id="app-version" class="font-semibold text-gray-800 dark:text-gray-200">2.6</span></p>
+                            <p class="text-gray-600 dark:text-gray-400">Versão do Aplicativo: <span id="app-version" class="font-semibold text-gray-800 dark:text-gray-200">2.8</span></p>
                         </div>
                     </div>
                  </div>
@@ -631,6 +631,8 @@
                 let localRacas = [];
                 let localVacinas = [];
                 let localGado = [];
+                //dodi2 para arrumar edição de cadastro de gado
+                let originalGadoData = null;
                 let lotacaoChartInstance, categoriaChartInstance;
 
                 function showView(viewId) {
@@ -1229,6 +1231,8 @@
                     renderGado(localGado);
                 });
 
+               
+
                 function renderGado(gadoList) {
                     listaGadoContainer.innerHTML = '';
                     if (gadoList.length === 0) {
@@ -1238,21 +1242,108 @@
                     gadoList.forEach(gado => {
                         const brinco = localBrincos.find(b => b.id === gado.brincoId);
                         const raca = localRacas.find(r => r.id === gado.racaId);
+                        const vacina = localVacinas.find(v => v.id === gado.vacinaId);
+                        
+                        // Formata a data para o padrão brasileiro (dd/mm/aaaa)
+                        // Adiciona 'T00:00:00' para evitar problemas de fuso horário com inputs do tipo 'date'
+                        const dataVacinaF = gado.dataVacina ? new Date(gado.dataVacina + 'T00:00:00').toLocaleDateString('pt-BR') : '';
+                        
+                        // Cria o HTML para a informação da vacina
+                        let vacinaInfoHtml = '<span class="text-xs text-gray-500 dark:text-gray-400">Sem vacina registrada</span>';
+                        if (vacina && dataVacinaF) {
+                            vacinaInfoHtml = `<i class="fas fa-syringe text-teal-500 mr-1"></i> ${vacina.nome} - ${dataVacinaF}`;
+                        }
+
                         const item = document.createElement('div');
-                        item.className = 'flex items-center justify-between bg-white dark:bg-zinc-800 p-3 rounded-md shadow-sm border border-gray-200 dark:border-zinc-700';
+                        // Estilo atualizado para o item da lista
+                        item.className = 'bg-white dark:bg-zinc-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-zinc-700 flex justify-between items-center';
+                        
+                        // HTML interno do item, agora com a linha da vacina
                         item.innerHTML = `
-                            <div>
-                                <span class="font-bold text-gray-800 dark:text-gray-200">Brinco: ${brinco ? brinco.numero : 'N/A'}</span>
-                                <span class="text-sm text-gray-600 dark:text-gray-400 ml-4">${raca ? raca.nome : 'N/A'} - ${gado.pesoKg} kg</span>
+                            <div class="flex-grow">
+                                <div class="flex items-baseline">
+                                    <span class="font-bold text-gray-800 dark:text-gray-200">Brinco: ${brinco ? brinco.numero : 'N/A'}</span>
+                                    <span class="text-sm text-gray-600 dark:text-gray-400 ml-4">${raca ? raca.nome : 'N/A'} - ${gado.pesoKg} kg</span>
+                                </div>
+                                <div class="text-sm text-gray-700 dark:text-gray-300 mt-2">
+                                    ${vacinaInfoHtml}
+                                </div>
                             </div>
-                            <div class="space-x-2">
-                                <button data-id="${gado.id}" class="edit-gado-btn text-blue-500 hover:text-blue-700"><i class="fas fa-pencil-alt"></i></button>
-                                <button data-id="${gado.id}" data-brinco-id="${gado.brincoId}" class="delete-gado-btn text-red-500 hover:text-red-700"><i class="fas fa-trash-alt"></i></button>
+                            <div class="space-x-2 flex-shrink-0 ml-4">
+                                <button data-id="${gado.id}" class="edit-gado-btn text-blue-500 hover:text-blue-700 p-2"><i class="fas fa-pencil-alt"></i></button>
+                                <button data-id="${gado.id}" data-brinco-id="${gado.brincoId}" class="delete-gado-btn text-red-500 hover:text-red-700 p-2"><i class="fas fa-trash-alt"></i></button>
                             </div>`;
                         listaGadoContainer.appendChild(item);
                     });
                 }
-                
+
+                    // --- SUBSTITUA O BLOCO addEventListener ANTIGO POR ESTE ---
+
+                    gadoForm.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+                        const gadoId = document.getElementById('gado-id').value;
+                        const newBrincoId = document.getElementById('gado-brinco-select').value;
+                        
+                        const gadoData = {
+                            brincoId: newBrincoId,
+                            racaId: document.getElementById('gado-raca-select').value,
+                            pesoKg: document.getElementById('gado-peso-kg').value,
+                            vacinaId: document.getElementById('gado-vacina-select').value || '',
+                            dataVacina: document.getElementById('gado-data-vacina').value || '',
+                        };
+
+                        if (!gadoData.brincoId || !gadoData.racaId || !gadoData.pesoKg) {
+                            showMessage(messageGado, 'Preencha Brinco, Raça e Peso.', 'error');
+                            return;
+                        }
+                        
+                        gadoSubmitButton.disabled = true;
+                        try {
+                            await runTransaction(db, async (transaction) => {
+                                const gadoRef = gadoId ? doc(db, `artifacts/${appId}/users/${userId}/gado`, gadoId) : doc(gadoCollection);
+                                
+                                // Lógica para lidar com a troca de brincos
+                                if (gadoId) { // Se for uma EDIÇÃO
+                                    const oldBrincoId = originalGadoData.brincoId;
+                                    if (oldBrincoId !== newBrincoId) {
+                                        // Libera o brinco antigo
+                                        const oldBrincoRef = doc(db, `artifacts/${appId}/users/${userId}/brincos`, oldBrincoId);
+                                        transaction.update(oldBrincoRef, { status: 'disponivel' });
+                                        // Ocupa o brinco novo
+                                        const newBrincoRef = doc(db, `artifacts/${appId}/users/${userId}/brincos`, newBrincoId);
+                                        transaction.update(newBrincoRef, { status: 'utilizado' });
+                                    }
+                                } else { // Se for um NOVO cadastro
+                                    const newBrincoRef = doc(db, `artifacts/${appId}/users/${userId}/brincos`, newBrincoId);
+                                    transaction.update(newBrincoRef, { status: 'utilizado' });
+                                }
+
+                                // Salva os dados do gado
+                                transaction.set(gadoRef, gadoData, { merge: !!gadoId });
+                            });
+
+                            showMessage(messageGado, 'Gado salvo com sucesso!', 'success');
+                            gadoForm.reset(); // Limpa o formulário
+                            originalGadoData = null; // Limpa os dados originais guardados
+                        } catch (error) {
+                            console.error("Erro ao salvar gado:", error);
+                            showMessage(messageGado, 'Erro ao salvar o gado.', 'error');
+                        } finally {
+                            gadoSubmitButton.disabled = false;
+                            gadoSubmitButton.textContent = gadoId ? 'Salvar Alterações' : 'Cadastrar Gado';
+                        }
+                    });
+                    // --- COLE ESTE BLOCO NA LINHA SEGUINTE AO CÓDIGO DO PASSO 3 ---
+
+                    document.querySelector('#view-gado-form-container .back-to-cadastros-hub').addEventListener('click', () => {
+                        gadoForm.reset();
+                        originalGadoData = null;
+                        gadoSubmitButton.textContent = 'Cadastrar Gado';
+                    });
+
+
+
+/*dodi2
                 gadoForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
                     const gadoId = document.getElementById('gado-id').value;
@@ -1286,8 +1377,9 @@
                     } finally {
                         gadoSubmitButton.disabled = false;
                     }
-                });
+                }); */
 
+/*dodi2
                 listaGadoContainer.addEventListener('click', async (e) => {
                     const target = e.target.closest('button');
                     if (!target) return;
@@ -1325,7 +1417,64 @@
                             window.scrollTo(0, 0);
                         }
                     }
-                });
+                });   */
+
+                    // --- SUBSTITUA O BLOCO addEventListener ANTIGO POR ESTE ---
+
+                    listaGadoContainer.addEventListener('click', async (e) => {
+                        const target = e.target.closest('button');
+                        if (!target) return;
+                        const gadoId = target.dataset.id;
+
+                        if (target.classList.contains('delete-gado-btn')) {
+                            const brincoId = target.dataset.brincoId;
+                            showConfirmModal('Excluir Gado?', 'Isso irá liberar o brinco novamente.', async () => {
+                                 try {
+                                    await runTransaction(db, async (transaction) => {
+                                        const brincoRef = doc(db, `artifacts/${appId}/users/${userId}/brincos`, brincoId);
+                                        const gadoRef = doc(db, `artifacts/${appId}/users/${userId}/gado`, gadoId);
+                                        
+                                        transaction.update(brincoRef, { status: 'disponivel' });
+                                        transaction.delete(gadoRef);
+                                    });
+                                    showMessage(messageGado, 'Gado excluído e brinco liberado.', 'success');
+                                } catch (error) {
+                                    console.error("Erro ao excluir gado:", error);
+                                    showMessage(messageGado, 'Erro ao excluir o gado.', 'error');
+                                }
+                            });
+                        } else if (target.classList.contains('edit-gado-btn')) {
+                            const gado = localGado.find(g => g.id === gadoId);
+                            if (gado) {
+                                originalGadoData = { ...gado }; // Guarda os dados originais
+
+                                // Popula a lista de brincos com os disponíveis MAIS o brinco atual do animal
+                                const brincosDisponiveis = localBrincos.filter(b => b.status === 'disponivel');
+                                const brincoAtual = localBrincos.find(b => b.id === gado.brincoId);
+                                const optionsParaSelect = [...brincosDisponiveis];
+                                
+                                // Adiciona o brinco atual à lista se ele não estiver lá
+                                if (brincoAtual && !optionsParaSelect.some(b => b.id === brincoAtual.id)) {
+                                    optionsParaSelect.push(brincoAtual);
+                                }
+                                // Ordena a lista de brincos numericamente
+                                optionsParaSelect.sort((a,b) => a.numero.localeCompare(b.numero, undefined, {numeric: true}));
+                                
+                                updateDynamicSelect(gadoBrincoSelect, optionsParaSelect, 'um brinco', false, 'id', 'numero');
+
+                                // Preenche o formulário com os dados do animal
+                                document.getElementById('gado-id').value = gado.id;
+                                document.getElementById('gado-brinco-select').value = gado.brincoId;
+                                document.getElementById('gado-raca-select').value = gado.racaId;
+                                document.getElementById('gado-peso-kg').value = gado.pesoKg;
+                                document.getElementById('gado-vacina-select').value = gado.vacinaId || '';
+                                document.getElementById('gado-data-vacina').value = gado.dataVacina || '';
+                                gadoSubmitButton.textContent = 'Salvar Alterações';
+                                window.scrollTo(0, 0); // Rola a página para o topo para ver o formulário
+                            }
+                        }
+                    });
+
 
                 // --- FUNÇÕES UTILITÁRIAS ---
                 function updateDynamicSelect(selectElement, data, placeholder, optional = false, valueKey = 'id', textKey = 'nome') {
